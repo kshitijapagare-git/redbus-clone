@@ -103,6 +103,23 @@ button { font: inherit; cursor: pointer; }
   background: var(--red); color: #fff; font-size: 18px; font-weight: 700;
 }
 
+/* City autocomplete */
+.combobox { position: relative; width: 100%; }
+.combobox > input { border: 0; outline: 0; font: inherit; font-size: 18px; width: 100%; background: transparent; }
+.combobox-listbox {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 10;
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.12); list-style: none; margin: 0; padding: 6px;
+  max-height: 260px; overflow-y: auto;
+}
+.combobox-option {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+  padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 15px;
+}
+.combobox-option-name { font-weight: 600; }
+.combobox-option-state { color: var(--muted); font-size: 13px; }
+.combobox-option.active, .combobox-option:hover { background: var(--red-soft); }
+
 /* Sections */
 .section { padding-top: 72px; }
 .section-head { display: flex; justify-content: space-between; align-items: center; }
@@ -130,6 +147,17 @@ button { font: inherit; cursor: pointer; }
 .bp-card { border: 1px solid var(--line); border-radius: 16px; padding: 18px; line-height: 1.5; }
 
 .date-text strong, .women-box > div { white-space: nowrap; }
+
+/* Combobox fields in SearchCard */
+.combobox-field { align-items: flex-start; padding-top: 16px; padding-bottom: 16px; }
+.combobox-field .field-icon { margin-top: 2px; }
+.combobox-field-inner { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.field-error { color: var(--red); font-size: 12px; font-weight: 600; }
+.swap-btn {
+  flex: 0 0 auto; align-self: center; width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--line); background: #fff; font-size: 18px; display: flex;
+  align-items: center; justify-content: center; margin: 0 -18px; position: relative; z-index: 1;
+}
 
 @media (max-width: 899px) {
   .header-inner { gap: 12px; }

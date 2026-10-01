@@ -1,28 +1,75 @@
 import { useState } from 'react'
+import CityAutocomplete from './CityAutocomplete'
+import { cities } from '../data'
+import type { City } from '../types'
 
 const formatDate = (d: Date) =>
   `${String(d.getDate()).padStart(2, '0')} ${d.toLocaleString('en-US', { month: 'short' })}, ${d.getFullYear()}`
+
+interface SearchErrors {
+  from?: string
+  to?: string
+}
 
 function SearchCard() {
   const [today] = useState(() => new Date())
   const [dayOffset, setDayOffset] = useState(0)
   const [forWomen, setForWomen] = useState(false)
+  const [fromCityId, setFromCityId] = useState<City['id'] | null>(null)
+  const [toCityId, setToCityId] = useState<City['id'] | null>(null)
+  const [errors, setErrors] = useState<SearchErrors>({})
 
   const date = new Date(today)
   date.setDate(today.getDate() + dayOffset)
+
+  const computeErrors = (from: City['id'] | null, to: City['id'] | null): SearchErrors => {
+    const nextErrors: SearchErrors = {}
+    if (from === null) nextErrors.from = 'Please select a departure city'
+    if (to === null) nextErrors.to = 'Please select a destination city'
+    if (from !== null && to !== null && from === to) {
+      nextErrors.from = 'From and To cities must be different'
+      nextErrors.to = 'From and To cities must be different'
+    }
+    return nextErrors
+  }
+
+  const validate = () => {
+    const nextErrors = computeErrors(fromCityId, toCityId)
+    setErrors(nextErrors)
+    return Object.keys(nextErrors).length === 0
+  }
+
+  const handleSwap = () => {
+    const nextFrom = toCityId
+    const nextTo = fromCityId
+    setFromCityId(nextFrom)
+    setToCityId(nextTo)
+    if (Object.keys(errors).length > 0) {
+      setErrors(computeErrors(nextFrom, nextTo))
+    }
+  }
 
   return (
     <div className="search-card">
       <div className="search-row">
         <div className="search-fields">
-          <label className="field">
+          <div className="field combobox-field">
             <span className="field-icon">🚌</span>
-            <input placeholder="From" aria-label="From" />
-          </label>
-          <label className="field">
+            <div className="combobox-field-inner">
+              <CityAutocomplete id="from-city" label="From" cities={cities} value={fromCityId} onChange={setFromCityId} />
+              {errors.from && <span className="field-error">{errors.from}</span>}
+            </div>
+          </div>
+          <button type="button" className="swap-btn" aria-label="Swap cities" onClick={handleSwap}>
+            ⇄
+          </button>
+          <div className="field combobox-field">
             <span className="field-icon">🚌</span>
-            <input placeholder="To" aria-label="To" />
-          </label>
+            <div className="combobox-field-inner">
+              <CityAutocomplete id="to-city" label="To" cities={cities} value={toCityId} onChange={setToCityId} />
+              {errors.to && <span className="field-error">{errors.to}</span>}
+            </div>
+          </div>
           <div className="field date-field">
             <span className="field-icon">📅</span>
             <div className="date-text">
@@ -54,7 +101,7 @@ function SearchCard() {
           />
         </div>
       </div>
-      <button type="button" className="search-btn">⌕ Search buses</button>
+      <button type="button" className="search-btn" onClick={validate}>⌕ Search buses</button>
     </div>
   )
 }
