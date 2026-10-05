@@ -18,6 +18,16 @@ button { font: inherit; cursor: pointer; }
 .container { max-width: 1440px; margin: 0 auto; padding: 0 16px; }
 @media (min-width: 900px) { .container { padding: 0 9vw; } }
 
+/* Footer */
+.site-footer {
+  padding: 24px 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.site-footer p { margin: 0; max-width: 1440px; margin: 0 auto; white-space: normal; word-wrap: break-word; }
+@media (min-width: 900px) { .site-footer { padding: 24px 9vw; } }
+
 /* Header */
 .header {
   border-top: 8px solid transparent;
