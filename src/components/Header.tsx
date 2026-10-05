@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent } from 'react'
-import { HOTELS_PATH, navigateTo, useCurrentPath } from '../lib/route'
+import { HOME_PATH, HOTELS_PATH, TRAINS_PATH, navigateTo, useCurrentPath } from '../lib/route'
 
 const MOBILE_BREAKPOINT = 900
 const MOBILE_PANEL_ID = 'header-mobile-panel'
@@ -92,11 +92,12 @@ function Header() {
 
   const currentPath = useCurrentPath()
   const isHotelsActive = currentPath === HOTELS_PATH
-  const isHomeActive = !isHotelsActive
+  const isTrainsActive = currentPath === TRAINS_PATH
+  const isHomeActive = !isHotelsActive && !isTrainsActive
 
-  const handleHotelsClick = (e: ReactMouseEvent<HTMLAnchorElement>) => {
+  const handleNavClick = (path: string) => (e: ReactMouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    navigateTo(HOTELS_PATH)
+    navigateTo(path)
     if (isMenuOpen) {
       closeMenu()
     }
@@ -105,10 +106,10 @@ function Header() {
   // Anchors fire a native click on Enter but not on Space, so Space needs
   // explicit handling here to trigger navigation (mirrors handleLinkKeyDown
   // used for the mobile panel links).
-  const handleHotelsKeyDown = (e: ReactKeyboardEvent<HTMLAnchorElement>) => {
+  const handleNavKeyDown = (path: string) => (e: ReactKeyboardEvent<HTMLAnchorElement>) => {
     if (e.key === ' ') {
       e.preventDefault()
-      navigateTo(HOTELS_PATH)
+      navigateTo(path)
       if (isMenuOpen) {
         closeMenu()
       }
@@ -120,14 +121,27 @@ function Header() {
       <div className="container header-inner">
         <div className="brand">redBus</div>
         <nav className="nav-main">
-          <a className={`nav-item${isHomeActive ? ' active' : ''}`} href="#">
+          <a
+            className={`nav-item${isHomeActive ? ' active' : ''}`}
+            href={HOME_PATH}
+            onClick={handleNavClick(HOME_PATH)}
+            onKeyDown={handleNavKeyDown(HOME_PATH)}
+          >
             <span className="nav-icon">🚌</span>Bus tickets
+          </a>
+          <a
+            className={`nav-item${isTrainsActive ? ' active' : ''}`}
+            href={TRAINS_PATH}
+            onClick={handleNavClick(TRAINS_PATH)}
+            onKeyDown={handleNavKeyDown(TRAINS_PATH)}
+          >
+            <span className="nav-icon">🚆</span>Train tickets
           </a>
           <a
             className={`nav-item${isHotelsActive ? ' active' : ''}`}
             href={HOTELS_PATH}
-            onClick={handleHotelsClick}
-            onKeyDown={handleHotelsKeyDown}
+            onClick={handleNavClick(HOTELS_PATH)}
+            onKeyDown={handleNavKeyDown(HOTELS_PATH)}
           >
             <span className="nav-icon">🛏️</span>Hotels
           </a>

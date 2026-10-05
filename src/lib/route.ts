@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 
+export const HOME_PATH = '/'
 export const HOTELS_PATH = '/hotels'
+export const TRAINS_PATH = '/trains'
 
 /**
  * Navigates to `path` using the History API and notifies any mounted
