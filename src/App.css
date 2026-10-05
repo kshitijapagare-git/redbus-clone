@@ -44,6 +44,7 @@ button { font: inherit; cursor: pointer; }
 .nav-item.active { color: var(--red); border-bottom-color: var(--red); }
 .nav-icon { font-size: 22px; line-height: 1.2; }
 .nav-side { margin-left: auto; display: flex; gap: 40px; font-size: 14px; font-weight: 500; }
+.menu-btn { display: none; margin-left: auto; border: 0; background: transparent; font-size: 24px; line-height: 1; padding: 8px; }
 
 /* Hero */
 .hero {
@@ -206,8 +207,48 @@ button { font: inherit; cursor: pointer; }
   .header-inner { gap: 12px; }
   .nav-item { padding: 0 10px; font-size: 12px; }
   .nav-side { display: none; }
+  .menu-btn { display: block; }
   .hero-bus { display: none; }
   .field { flex-basis: 100%; border-right: 0; border-bottom: 1px solid var(--line); }
   .date-field { flex-wrap: wrap; padding: 12px 20px; border-bottom: 0; }
   .women-box { flex: 1 1 100%; }
+}
+
+.mobile-panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 0.4);
+  z-index: 20;
+}
+.mobile-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: min(320px, 85vw);
+  max-width: 100vw;
+  background: #fff;
+  box-shadow: 2px 0 16px rgb(0 0 0 / 0.2);
+  z-index: 21;
+  transform: translateX(0);
+  transition: transform 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+  overflow-y: auto;
+}
+.mobile-panel-close {
+  align-self: flex-end;
+  order: -1;
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  padding: 4px 8px;
+}
+.mobile-panel-nav { display: flex; flex-direction: column; gap: 20px; font-size: 16px; font-weight: 500; }
+
+@media (min-width: 900px) {
+  .menu-btn { display: none; }
 }
