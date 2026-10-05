@@ -1,7 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import SearchCard from './SearchCard'
 import { RECENT_SEARCHES_STORAGE_KEY, formatRecentSearchDate, toDateKey } from '../lib/recentSearches'
+import { WOMEN_TOGGLE_STORAGE_KEY } from '../lib/womenToggle'
 
 function selectCity(input: HTMLElement, typed: string, optionName: string) {
   fireEvent.change(input, { target: { value: typed } })
@@ -221,6 +222,58 @@ describe('SearchCard', () => {
       expect(screen.getByRole('combobox', { name: 'To' })).toBeInTheDocument()
       expect(screen.getByRole('button', { name: /search buses/i })).toBeInTheDocument()
     })
+    })
+
+    describe('women toggle persistence', () => {
+      it('restores aria-checked="true" on mount when redbus:womenToggle was previously set to true', () => {
+        localStorage.setItem(WOMEN_TOGGLE_STORAGE_KEY, JSON.stringify(true))
+
+        render(<SearchCard />)
+
+        expect(screen.getByRole('switch', { name: 'Booking for women' })).toHaveAttribute('aria-checked', 'true')
+      })
+
+      it('defaults to off when nothing is persisted', () => {
+        render(<SearchCard />)
+
+        expect(screen.getByRole('switch', { name: 'Booking for women' })).toHaveAttribute('aria-checked', 'false')
+      })
+
+      it('persists the new value on toggle and restores it on remount', () => {
+        const { unmount } = render(<SearchCard />)
+        const toggle = screen.getByRole('switch', { name: 'Booking for women' })
+
+        fireEvent.click(toggle)
+        expect(toggle).toHaveAttribute('aria-checked', 'true')
+        expect(JSON.parse(localStorage.getItem(WOMEN_TOGGLE_STORAGE_KEY) ?? 'null')).toBe(true)
+
+        unmount()
+
+        render(<SearchCard />)
+        expect(screen.getByRole('switch', { name: 'Booking for women' })).toHaveAttribute('aria-checked', 'true')
+      })
+
+      it('defaults to off and remains toggleable when localStorage is unavailable', () => {
+        vi.stubGlobal('localStorage', {
+          getItem: vi.fn(() => {
+            throw new Error('unavailable')
+          }),
+          setItem: vi.fn(() => {
+            throw new Error('unavailable')
+          }),
+          removeItem: vi.fn(),
+          clear: vi.fn(),
+        })
+
+        render(<SearchCard />)
+        const toggle = screen.getByRole('switch', { name: 'Booking for women' })
+        expect(toggle).toHaveAttribute('aria-checked', 'false')
+
+        fireEvent.click(toggle)
+        expect(toggle).toHaveAttribute('aria-checked', 'true')
+
+        vi.unstubAllGlobals()
+      })
     })
 
     describe('clearing the boarding point selection on search changes', () => {

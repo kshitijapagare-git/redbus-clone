@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import CityAutocomplete from './CityAutocomplete'
 import RecentSearches from './RecentSearches'
+import WomenInfoDialog from './WomenInfoDialog'
 import { useRecentSearches } from '../hooks/useRecentSearches'
 import { isPastDate, toDateKey } from '../lib/recentSearches'
 import { clearBoardingPointSelection } from '../hooks/useBoardingPointSelection'
+import { loadWomenToggle, persistWomenToggle } from '../lib/womenToggle'
+import { buildSearchUrl } from '../lib/searchUrl'
 import { cities } from '../data'
 import type { City, RecentSearch } from '../types'
 
@@ -23,10 +26,12 @@ export interface SearchCardProps {
 function SearchCard({ fromCityId: fromCityIdProp, onFromCityIdChange }: SearchCardProps = {}) {
   const [today] = useState(() => new Date())
   const [dayOffset, setDayOffset] = useState(0)
-  const [forWomen, setForWomen] = useState(false)
+  const [forWomen, setForWomen] = useState(() => loadWomenToggle().value)
   const [internalFromCityId, setInternalFromCityId] = useState<City['id'] | null>(null)
   const [toCityId, setToCityId] = useState<City['id'] | null>(null)
   const [errors, setErrors] = useState<SearchErrors>({})
+  const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false)
+  const knowMoreLinkRef = useRef<HTMLAnchorElement>(null)
   const { searches, available, save, remove, clearAll } = useRecentSearches(cities)
 
   const fromCityId = fromCityIdProp !== undefined ? fromCityIdProp : internalFromCityId
@@ -63,8 +68,17 @@ function SearchCard({ fromCityId: fromCityIdProp, onFromCityIdChange }: SearchCa
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length === 0) {
       save({ fromCityId: fromCityId as City['id'], toCityId: toCityId as City['id'], date: toDateKey(date) })
+      window.location.href = buildSearchUrl(fromCityId as City['id'], toCityId as City['id'], toDateKey(date), forWomen)
     }
     return Object.keys(nextErrors).length === 0
+  }
+
+  const handleToggleWomen = () => {
+    setForWomen((v) => {
+      const next = !v
+      persistWomenToggle(next)
+      return next
+    })
   }
 
   const handleSwap = () => {
@@ -144,7 +158,16 @@ function SearchCard({ fromCityId: fromCityIdProp, onFromCityIdChange }: SearchCa
           <span className="women-icon">👩</span>
           <div>
             <div>Booking for women</div>
-            <a href="#">Know more</a>
+            <a
+              href="#"
+              ref={knowMoreLinkRef}
+              onClick={(e) => {
+                e.preventDefault()
+                setIsInfoDialogOpen(true)
+              }}
+            >
+              Know more
+            </a>
           </div>
           <button
             type="button"
@@ -152,12 +175,19 @@ function SearchCard({ fromCityId: fromCityIdProp, onFromCityIdChange }: SearchCa
             aria-checked={forWomen}
             aria-label="Booking for women"
             className={`toggle ${forWomen ? 'on' : ''}`}
-            onClick={() => setForWomen((v) => !v)}
+            onClick={handleToggleWomen}
           />
         </div>
       </div>
       <button type="button" className="search-btn" onClick={validate}>⌕ Search buses</button>
     </div>
+    <WomenInfoDialog
+      isOpen={isInfoDialogOpen}
+      onClose={() => {
+        setIsInfoDialogOpen(false)
+        knowMoreLinkRef.current?.focus()
+      }}
+    />
     {available && searches.length > 0 && (
       <RecentSearches
         searches={searches}
