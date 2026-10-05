@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import CityAutocomplete from './CityAutocomplete'
 import RecentSearches from './RecentSearches'
 import { useRecentSearches } from '../hooks/useRecentSearches'
 import { isPastDate, toDateKey } from '../lib/recentSearches'
+import { clearBoardingPointSelection } from '../hooks/useBoardingPointSelection'
 import { cities } from '../data'
 import type { City, RecentSearch } from '../types'
 
@@ -14,17 +15,37 @@ interface SearchErrors {
   to?: string
 }
 
-function SearchCard() {
+export interface SearchCardProps {
+  fromCityId?: City['id'] | null
+  onFromCityIdChange?: (id: City['id'] | null) => void
+}
+
+function SearchCard({ fromCityId: fromCityIdProp, onFromCityIdChange }: SearchCardProps = {}) {
   const [today] = useState(() => new Date())
   const [dayOffset, setDayOffset] = useState(0)
   const [forWomen, setForWomen] = useState(false)
-  const [fromCityId, setFromCityId] = useState<City['id'] | null>(null)
+  const [internalFromCityId, setInternalFromCityId] = useState<City['id'] | null>(null)
   const [toCityId, setToCityId] = useState<City['id'] | null>(null)
   const [errors, setErrors] = useState<SearchErrors>({})
   const { searches, available, save, remove, clearAll } = useRecentSearches(cities)
 
+  const fromCityId = fromCityIdProp !== undefined ? fromCityIdProp : internalFromCityId
+  const setFromCityId = onFromCityIdChange ?? setInternalFromCityId
+
   const date = new Date(today)
   date.setDate(today.getDate() + dayOffset)
+
+  // Any change to From/To/date/women-toggle after the initial mount clears the
+  // existing boarding point selection. The ref guard prevents this from firing
+  // on mount, which would otherwise wipe a `bp` the user arrived with.
+  const isFirstRender = useRef(true)
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+    clearBoardingPointSelection()
+  }, [fromCityId, toCityId, dayOffset, forWomen])
 
   const computeErrors = (from: City['id'] | null, to: City['id'] | null): SearchErrors => {
     const nextErrors: SearchErrors = {}
@@ -150,5 +171,6 @@ function SearchCard() {
     </>
   )
 }
+
 
 export default SearchCard

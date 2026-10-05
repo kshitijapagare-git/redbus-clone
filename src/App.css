@@ -150,7 +150,18 @@ button { font: inherit; cursor: pointer; }
 
 /* Boarding points */
 .bp-grid { list-style: none; padding: 0; margin: 24px 0 64px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-.bp-card { border: 1px solid var(--line); border-radius: 16px; padding: 18px; line-height: 1.5; }
+.bp-card { border: 1px solid var(--line); border-radius: 16px; padding: 18px; line-height: 1.5; cursor: pointer; }
+.bp-card.selected { border-color: var(--red); background: var(--red-soft); box-shadow: 0 0 0 2px var(--red); }
+.bp-summary {
+  margin: 24px 0 0; padding: 18px; border: 1px solid var(--red); border-radius: 16px;
+  background: var(--red-soft); line-height: 1.5;
+}
+.bp-summary p { margin: 4px 0 0; }
+.bp-continue-btn {
+  margin: 24px 0 64px; border: 0; border-radius: 999px; background: var(--red); color: #fff;
+  font-size: 18px; font-weight: 700; padding: 14px 32px;
+}
+.bp-continue-btn:disabled { background: #ccc; color: #888; cursor: not-allowed; }
 
 /* Recent searches */
 .recent-searches { margin-top: 16px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 16px; }

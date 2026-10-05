@@ -13,10 +13,12 @@ function selectCity(input: HTMLElement, typed: string, optionName: string) {
 describe('SearchCard', () => {
   beforeEach(() => {
     localStorage.clear()
+    window.history.replaceState(null, '', '/')
   })
 
   afterEach(() => {
     localStorage.clear()
+    window.history.replaceState(null, '', '/')
   })
 
   it('suggests Pune, Maharashtra when typing "pu" in the From field and selects city id 1', () => {
@@ -219,5 +221,54 @@ describe('SearchCard', () => {
       expect(screen.getByRole('combobox', { name: 'To' })).toBeInTheDocument()
       expect(screen.getByRole('button', { name: /search buses/i })).toBeInTheDocument()
     })
-  })
+    })
+
+    describe('clearing the boarding point selection on search changes', () => {
+      it('leaves an existing bp param untouched when nothing changes after mount', () => {
+        window.history.replaceState(null, '', '/?bp=2')
+        render(<SearchCard />)
+        expect(window.location.search).toBe('?bp=2')
+      })
+
+      it('clears bp when the From city changes', () => {
+        window.history.replaceState(null, '', '/?bp=2')
+        render(<SearchCard />)
+        const fromInput = screen.getByRole('combobox', { name: 'From' })
+        selectCity(fromInput, 'pu', 'Pune')
+        expect(window.location.search).toBe('')
+      })
+
+      it('clears bp when the To city changes', () => {
+        window.history.replaceState(null, '', '/?bp=2')
+        render(<SearchCard />)
+        const toInput = screen.getByRole('combobox', { name: 'To' })
+        selectCity(toInput, 'ben', 'Bengaluru')
+        expect(window.location.search).toBe('')
+      })
+
+      it('clears bp when the date chip changes', () => {
+        window.history.replaceState(null, '', '/?bp=2')
+        render(<SearchCard />)
+        fireEvent.click(screen.getByRole('button', { name: 'Tomorrow' }))
+        expect(window.location.search).toBe('')
+      })
+
+      it('clears bp when the women toggle changes', () => {
+        window.history.replaceState(null, '', '/?bp=2')
+        render(<SearchCard />)
+        fireEvent.click(screen.getByRole('switch', { name: 'Booking for women' }))
+        expect(window.location.search).toBe('')
+      })
+
+      it('clears bp when a recent search is selected', () => {
+        localStorage.setItem(
+          RECENT_SEARCHES_STORAGE_KEY,
+          JSON.stringify([{ fromCityId: 1, toCityId: 2, date: toDateKey(new Date()) }]),
+        )
+        window.history.replaceState(null, '', '/?bp=2')
+        render(<SearchCard />)
+        fireEvent.click(screen.getByText(`Pune → Bengaluru · ${formatRecentSearchDate(toDateKey(new Date()))}`))
+        expect(window.location.search).toBe('')
+      })
+    })
 })

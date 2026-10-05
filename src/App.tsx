@@ -1,11 +1,15 @@
+import { useState } from 'react'
 import BoardingPointList from './components/BoardingPointList'
 import Header from './components/Header'
 import Offers from './components/Offers'
 import SearchCard from './components/SearchCard'
 import { boardingPoints, cities } from './data'
+import type { City } from './types'
 import './App.css'
 
 function App() {
+  const [fromCityId, setFromCityId] = useState<City['id'] | null>(null)
+
   return (
     <>
       <Header />
@@ -25,7 +29,7 @@ function App() {
         </div>
       </section>
       <div className="container search-wrap">
-        <SearchCard />
+        <SearchCard fromCityId={fromCityId} onFromCityIdChange={setFromCityId} />
       </div>
       <main>
         <Offers />
@@ -33,7 +37,7 @@ function App() {
           <div className="section-head">
             <h2>Boarding Points</h2>
           </div>
-          <BoardingPointList cities={cities} boardingPoints={boardingPoints} />
+          <BoardingPointList cities={cities} boardingPoints={boardingPoints} fromCityId={fromCityId} />
         </section>
       </main>
     </>
