@@ -5,8 +5,9 @@ import HotelsPage from './components/HotelsPage'
 import Offers from './components/Offers'
 import SearchCard from './components/SearchCard'
 import TrainsPage from './components/TrainsPage'
+import TrainsSearchPage from './components/TrainsSearchPage'
 import { boardingPoints, cities } from './data'
-import { HOTELS_PATH, TRAINS_PATH, useCurrentPath } from './lib/route'
+import { HOTELS_PATH, TRAINS_PATH, TRAINS_SEARCH_PATH, useCurrentPath } from './lib/route'
 import type { City } from './types'
 import './App.css'
 
@@ -19,6 +20,15 @@ function App() {
       <>
         <Header />
         <HotelsPage />
+      </>
+    )
+  }
+
+  if (currentPath === TRAINS_SEARCH_PATH) {
+    return (
+      <>
+        <Header />
+        <TrainsSearchPage />
       </>
     )
   }

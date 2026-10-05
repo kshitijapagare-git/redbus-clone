@@ -342,9 +342,22 @@ button { font: inherit; cursor: pointer; }
 
 /* Hotels and Trains pages */
 .hotels-page { padding-bottom: 120px; overflow-x: hidden; max-width: 100vw; }
-.trains-page { padding: 72px 0 120px; }
-.trains-page h1 { margin: 0 0 16px; font-size: 32px; font-weight: 800; }
-.trains-page p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.5; }
+.trains-page { padding-bottom: 120px; overflow-x: hidden; max-width: 100vw; }
+
+.train-hero { background: linear-gradient(180deg, #1f3a5f 0%, #2f5f8f 55%, #6fa8c9 100%); }
+.train-hero h1 { position: relative; margin: 0; padding-top: 72px; font-size: clamp(28px, 4vw, 48px); line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
+.irctc-badge { position: relative; margin: 14px 0 0; font-size: 16px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; background: rgb(255 255 255 / 0.15); padding: 8px 14px; border-radius: 999px; }
+.train-illustration { position: absolute; right: 8%; bottom: 20px; font-size: 90px; }
+
+.quiz-tab-banner {
+  margin-bottom: 12px;
+  padding: 14px 20px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #ffd76a, #ffb84d);
+  font-weight: 700;
+  font-size: 15px;
+  color: #3a2a00;
+}
 
 .hotels-hero { height: 260px; background: linear-gradient(180deg, #2f6f5e 0%, #4f9c82 55%, #8fc9ae 100%); }
 .hotels-hero h1 { position: relative; margin: 0; padding-top: 72px; font-size: clamp(28px, 4vw, 48px); line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
@@ -355,4 +368,14 @@ button { font: inherit; cursor: pointer; }
 
 @media (max-width: 480px) {
   .hotel-search-fields .field { flex-basis: 100%; border-right: 0; border-bottom: 1px solid var(--line); }
+}
+
+/* Trains search card */
+.train-search-card { max-width: 100%; }
+.train-search-fields { max-width: 100%; }
+.train-free-cancellation-box small { color: var(--muted); font-size: 13px; display: block; margin-top: 2px; }
+
+@media (max-width: 899px) {
+  .train-search-fields .field { flex-basis: 100%; border-right: 0; border-bottom: 1px solid var(--line); }
+  .train-free-cancellation-box { flex: 1 1 100%; }
 }
