@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import CityAutocomplete from './CityAutocomplete'
+import RecentSearches from './RecentSearches'
+import { useRecentSearches } from '../hooks/useRecentSearches'
+import { isPastDate, toDateKey } from '../lib/recentSearches'
 import { cities } from '../data'
-import type { City } from '../types'
+import type { City, RecentSearch } from '../types'
 
 const formatDate = (d: Date) =>
   `${String(d.getDate()).padStart(2, '0')} ${d.toLocaleString('en-US', { month: 'short' })}, ${d.getFullYear()}`
@@ -18,6 +21,7 @@ function SearchCard() {
   const [fromCityId, setFromCityId] = useState<City['id'] | null>(null)
   const [toCityId, setToCityId] = useState<City['id'] | null>(null)
   const [errors, setErrors] = useState<SearchErrors>({})
+  const { searches, available, save, remove, clearAll } = useRecentSearches(cities)
 
   const date = new Date(today)
   date.setDate(today.getDate() + dayOffset)
@@ -36,6 +40,9 @@ function SearchCard() {
   const validate = () => {
     const nextErrors = computeErrors(fromCityId, toCityId)
     setErrors(nextErrors)
+    if (Object.keys(nextErrors).length === 0) {
+      save({ fromCityId: fromCityId as City['id'], toCityId: toCityId as City['id'], date: toDateKey(date) })
+    }
     return Object.keys(nextErrors).length === 0
   }
 
@@ -49,7 +56,34 @@ function SearchCard() {
     }
   }
 
+  const handleSelectRecent = (search: RecentSearch) => {
+    setFromCityId(search.fromCityId)
+    setToCityId(search.toCityId)
+    setErrors(computeErrors(search.fromCityId, search.toCityId))
+
+    if (isPastDate(search.date, today)) {
+      setDayOffset(0)
+      return
+    }
+
+    const todayKey = toDateKey(today)
+    const tomorrow = new Date(today)
+    tomorrow.setDate(today.getDate() + 1)
+    const tomorrowKey = toDateKey(tomorrow)
+
+    if (search.date === todayKey) {
+      setDayOffset(0)
+    } else if (search.date === tomorrowKey) {
+      setDayOffset(1)
+    } else {
+      // Future date beyond tomorrow: the UI only supports today/tomorrow chips,
+      // so clamp to the closest supported value.
+      setDayOffset(1)
+    }
+  }
+
   return (
+    <>
     <div className="search-card">
       <div className="search-row">
         <div className="search-fields">
@@ -103,6 +137,17 @@ function SearchCard() {
       </div>
       <button type="button" className="search-btn" onClick={validate}>⌕ Search buses</button>
     </div>
+    {available && searches.length > 0 && (
+      <RecentSearches
+        searches={searches}
+        cities={cities}
+        today={today}
+        onSelect={handleSelectRecent}
+        onRemove={remove}
+        onClearAll={clearAll}
+      />
+    )}
+    </>
   )
 }
 

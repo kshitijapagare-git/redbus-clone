@@ -152,6 +152,32 @@ button { font: inherit; cursor: pointer; }
 .bp-grid { list-style: none; padding: 0; margin: 24px 0 64px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
 .bp-card { border: 1px solid var(--line); border-radius: 16px; padding: 18px; line-height: 1.5; }
 
+/* Recent searches */
+.recent-searches { margin-top: 16px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 16px; }
+.recent-searches-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 700; }
+.recent-searches-clear {
+  border: 0; background: transparent; color: var(--link); font-weight: 600; text-decoration: underline;
+  font-size: 14px; padding: 0;
+}
+.recent-searches-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.recent-search-chip {
+  display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px;
+  padding: 8px 10px 8px 14px; background: var(--red-soft); font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.recent-search-past {
+  background: #eee; border-color: #ccc; color: var(--muted);
+}
+.recent-search-past-badge {
+  background: #777; color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 999px;
+}
+.recent-search-remove {
+  border: 1px solid var(--line); background: #fff; color: var(--ink); width: 22px; height: 22px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;
+  line-height: 1; padding: 0; cursor: pointer;
+}
+.recent-search-remove:hover { background: var(--red-soft); border-color: var(--red); }
+
 .date-text strong, .women-box > div { white-space: nowrap; }
 
 /* Combobox fields in SearchCard */
