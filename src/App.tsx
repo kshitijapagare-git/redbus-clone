@@ -1,14 +1,26 @@
 import { useState } from 'react'
 import BoardingPointList from './components/BoardingPointList'
 import Header from './components/Header'
+import HotelsPage from './components/HotelsPage'
 import Offers from './components/Offers'
 import SearchCard from './components/SearchCard'
 import { boardingPoints, cities } from './data'
+import { HOTELS_PATH, useCurrentPath } from './lib/route'
 import type { City } from './types'
 import './App.css'
 
 function App() {
   const [fromCityId, setFromCityId] = useState<City['id'] | null>(null)
+  const currentPath = useCurrentPath()
+
+  if (currentPath === HOTELS_PATH) {
+    return (
+      <>
+        <Header />
+        <HotelsPage />
+      </>
+    )
+  }
 
   return (
     <>
