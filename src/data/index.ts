@@ -22,4 +22,5 @@ export * from './whatsNew'
 export * from './governmentBuses'
 export * from './popularLists'
 export * from './footerLinks'
+export * from './buses'
 

@@ -6,7 +6,8 @@ import { useRecentSearches } from '../hooks/useRecentSearches'
 import { isPastDate, toDateKey } from '../lib/recentSearches'
 import { clearBoardingPointSelection } from '../hooks/useBoardingPointSelection'
 import { loadWomenToggle, persistWomenToggle } from '../lib/womenToggle'
-import { buildSearchUrl } from '../lib/searchUrl'
+import { buildBusSearchUrl } from '../lib/buildSearchUrl'
+import { navigateTo } from '../lib/route'
 import { cities } from '../data'
 import type { City, RecentSearch } from '../types'
 
@@ -63,12 +64,18 @@ function SearchCard({ fromCityId: fromCityIdProp, onFromCityIdChange }: SearchCa
     return nextErrors
   }
 
-  const validate = () => {
+  const handleSearchSubmit = () => {
     const nextErrors = computeErrors(fromCityId, toCityId)
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length === 0) {
       save({ fromCityId: fromCityId as City['id'], toCityId: toCityId as City['id'], date: toDateKey(date) })
-      window.location.href = buildSearchUrl(fromCityId as City['id'], toCityId as City['id'], toDateKey(date), forWomen)
+      const url = buildBusSearchUrl({
+        fromCityId: fromCityId as City['id'],
+        toCityId: toCityId as City['id'],
+        date: toDateKey(date),
+        women: forWomen,
+      })
+      navigateTo(url)
     }
     return Object.keys(nextErrors).length === 0
   }
@@ -179,7 +186,7 @@ function SearchCard({ fromCityId: fromCityIdProp, onFromCityIdChange }: SearchCa
           />
         </div>
       </div>
-      <button type="button" className="search-btn" onClick={validate}>⌕ Search buses</button>
+      <button type="button" className="search-btn" onClick={handleSearchSubmit}>⌕ Search buses</button>
     </div>
     <WomenInfoDialog
       isOpen={isInfoDialogOpen}

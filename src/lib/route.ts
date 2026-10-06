@@ -7,6 +7,7 @@ export const TRAINS_SEARCH_PATH = '/trains/search'
 export const ACCOUNT_PATH = '/account'
 export const HELP_PATH = '/help'
 export const OFFERS_PATH = '/offers'
+export const SEARCH_PATH = '/search'
 
 /**
  * Navigates to `path` using the History API and notifies any mounted

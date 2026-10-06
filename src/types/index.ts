@@ -18,3 +18,22 @@ export interface BoardingPoint {
   landmark: string
   cityId: City['id']
 }
+
+export type BusType = 'AC Seater' | 'AC Sleeper' | 'Non-AC Seater' | 'Non-AC Sleeper'
+
+export interface Bus {
+  id: number
+  /** `'<fromCityId>-<toCityId>'`, e.g. '1-2'. */
+  routeId: string
+  operatorName: string
+  busType: BusType
+  /** 24h 'HH:MM' */
+  departureTime: string
+  /** 24h 'HH:MM' */
+  arrivalTime: string
+  durationMins: number
+  fare: number
+  seatsAvailable: number
+  rating: number
+  isWomenFriendly: boolean
+}

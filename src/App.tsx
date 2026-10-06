@@ -4,6 +4,7 @@ import AccountPage from './components/AccountPage'
 import AppDownloadBanner from './components/AppDownloadBanner'
 import AppPromoStrip from './components/AppPromoStrip'
 import BoardingPointList from './components/BoardingPointList'
+import BusSearchResultsPage from './components/BusSearchResultsPage'
 import FAQsSection from './components/FAQsSection'
 import FestivalTrainsSection from './components/FestivalTrainsSection'
 import Footer from './components/Footer'
@@ -22,7 +23,16 @@ import TrainsPage from './components/TrainsPage'
 import TrainsSearchPage from './components/TrainsSearchPage'
 import WhatsNewSection from './components/WhatsNewSection'
 import { boardingPoints, cities } from './data'
-import { ACCOUNT_PATH, HELP_PATH, HOTELS_PATH, OFFERS_PATH, TRAINS_PATH, TRAINS_SEARCH_PATH, useCurrentPath } from './lib/route'
+import {
+  ACCOUNT_PATH,
+  HELP_PATH,
+  HOTELS_PATH,
+  OFFERS_PATH,
+  SEARCH_PATH,
+  TRAINS_PATH,
+  TRAINS_SEARCH_PATH,
+  useCurrentPath,
+} from './lib/route'
 import type { City } from './types'
 import './App.css'
 
@@ -42,6 +52,8 @@ function App() {
     pageContent = <OffersPage />
   } else if (currentPath === TRAINS_SEARCH_PATH) {
     pageContent = <TrainsSearchPage />
+  } else if (currentPath === SEARCH_PATH) {
+    pageContent = <BusSearchResultsPage />
   } else if (currentPath === TRAINS_PATH) {
     pageContent = <TrainsPage />
   } else {
