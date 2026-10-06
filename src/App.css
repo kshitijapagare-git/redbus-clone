@@ -164,7 +164,7 @@ button { font: inherit; cursor: pointer; }
 .section-head { display: flex; justify-content: space-between; align-items: center; }
 .section-head h2 { margin: 0; font-size: 26px; font-weight: 700; }
 .section-head a { color: var(--link); text-decoration: underline; font-weight: 600; }
-.tabs { display: flex; gap: 12px; margin: 34px 0 18px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 12px; margin: 34px 0 18px; }
 .tab { border: 1px solid #bbb; background: #fff; border-radius: 8px; padding: 8px 14px; font-size: 16px; font-weight: 500; }
 .tab.active { background: var(--red-soft); border-color: var(--red-soft); font-weight: 700; }
 .tab[aria-selected="true"] { background: var(--red-soft); border-color: var(--red); font-weight: 700; }
@@ -545,7 +545,8 @@ button { font: inherit; cursor: pointer; }
 }
 
 /* Carousel */
-.carousel { position: relative; outline: none; }
+.carousel { position: relative; outline: none; border-radius: 12px; }
+.carousel:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
 .carousel-track {
   display: flex;
   gap: 14px;
@@ -554,6 +555,8 @@ button { font: inherit; cursor: pointer; }
   padding: 4px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  /* Match the padding so snapping to the first card lands at scrollLeft 0. */
+  scroll-padding-inline: 4px;
   scrollbar-width: none;
 }
 .carousel-track::-webkit-scrollbar { display: none; }

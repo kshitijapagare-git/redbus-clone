@@ -32,9 +32,10 @@ const categoryLabel = (category: OfferCategory) => category.charAt(0).toUpperCas
 
 export interface OffersProps {
   offers?: Offer[]
+  title?: string
 }
 
-function Offers({ offers = defaultOffers }: OffersProps) {
+function Offers({ offers = defaultOffers, title = 'Offers for you' }: OffersProps) {
   const [activeCategory, setActiveCategory] = useState<TabCategory>('all')
   const [copyStatus, setCopyStatus] = useState<Record<string, 'copied' | 'failed' | undefined>>({})
   const timeoutsRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
@@ -52,8 +53,15 @@ function Offers({ offers = defaultOffers }: OffersProps) {
   )
 
   const handleCopy = (code: string) => {
-    navigator.clipboard
-      .writeText(code)
+    // A missing Clipboard API (e.g. plain HTTP) throws synchronously; turn that
+    // into a rejection so it reaches .catch below and shows the failure message.
+    let copy: Promise<void>
+    try {
+      copy = navigator.clipboard.writeText(code)
+    } catch (err) {
+      copy = Promise.reject(err)
+    }
+    copy
       .then(() => {
         flushSync(() => {
           setCopyStatus((prev) => ({ ...prev, [code]: 'copied' }))
@@ -77,7 +85,7 @@ function Offers({ offers = defaultOffers }: OffersProps) {
   return (
     <section className="container section">
       <div className="section-head">
-        <h2>Offers for you</h2>
+        <h2>{title}</h2>
         <a
           href={OFFERS_PATH}
           onClick={(e) => {

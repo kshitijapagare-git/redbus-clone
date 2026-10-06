@@ -1,19 +1,7 @@
 import { useState } from 'react'
-import { popularBusOperators, popularBusRoutes, popularCities } from '../data'
-
-interface PopularListConfig {
-  id: string
-  title: string
-  items: string[]
-}
+import { popularLists as lists } from '../data'
 
 function PopularListsSection() {
-  const lists: PopularListConfig[] = [
-    { id: 'popular-bus-routes', title: 'Popular Bus Routes', items: popularBusRoutes },
-    { id: 'popular-cities', title: 'Popular Cities', items: popularCities },
-    { id: 'popular-bus-operators', title: 'Popular Bus Operators', items: popularBusOperators },
-  ]
-
   const [openListIds, setOpenListIds] = useState<Record<string, boolean>>({})
 
   const toggleList = (id: string) => {

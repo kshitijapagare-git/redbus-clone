@@ -131,5 +131,20 @@ describe('Offers', () => {
         expect(screen.getByText('Copy failed. Please copy the code manually.')).toBeInTheDocument()
       })
     })
+
+    it('shows the failure message when the Clipboard API is unavailable', async () => {
+      vi.stubGlobal('navigator', { ...navigator, clipboard: undefined })
+
+      const offers: Offer[] = [
+        { title: 'Single offer', valid: '31 Oct', code: 'NOCLIP', tone: 'pink', category: 'bus' },
+      ]
+      render(<Offers offers={offers} />)
+
+      fireEvent.click(screen.getByRole('button', { name: /NOCLIP/ }))
+
+      await vi.waitFor(() => {
+        expect(screen.getByText('Copy failed. Please copy the code manually.')).toBeInTheDocument()
+      })
+    })
   })
 })

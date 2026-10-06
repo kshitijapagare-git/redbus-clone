@@ -30,3 +30,16 @@ export const popularBusOperators: string[] = [
   'Orange Travels',
   'Kallada Travels',
 ]
+
+export interface PopularList {
+  id: string
+  title: string
+  items: string[]
+}
+
+/** The collapsible lists in the Popular Searches section, in display order. */
+export const popularLists: PopularList[] = [
+  { id: 'popular-bus-routes', title: 'Popular Bus Routes', items: popularBusRoutes },
+  { id: 'popular-cities', title: 'Popular Cities', items: popularCities },
+  { id: 'popular-bus-operators', title: 'Popular Bus Operators', items: popularBusOperators },
+]

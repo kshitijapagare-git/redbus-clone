@@ -99,6 +99,15 @@ describe('CityAutocomplete', () => {
     fireEvent.mouseDown(option)
 
     expect(handleChange).toHaveBeenCalledWith(2)
+  })
+
+  it('shows the selected city name once the parent stores the clicked suggestion', () => {
+    render(<ControlledCityAutocomplete />)
+    const input = screen.getByRole('combobox')
+    fireEvent.change(input, { target: { value: 'ben' } })
+
+    fireEvent.mouseDown(screen.getByRole('option'))
+
     expect(input).toHaveValue('Bengaluru')
   })
 

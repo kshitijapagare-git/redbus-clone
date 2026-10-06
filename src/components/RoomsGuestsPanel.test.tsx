@@ -110,7 +110,8 @@ describe('RoomsGuestsPanel', () => {
   it('calls onClose and restores focus to the trigger when clicking outside', () => {
     const onClose = vi.fn()
     render(<Harness onClose={onClose} />)
-    fireEvent.mouseDown(document.body)
+    // false = default prevented, so the browser won't move focus to the clicked spot afterwards.
+    expect(fireEvent.mouseDown(document.body)).toBe(false)
     expect(onClose).toHaveBeenCalledTimes(1)
     expect(screen.getByRole('button', { name: 'Trigger' })).toHaveFocus()
   })

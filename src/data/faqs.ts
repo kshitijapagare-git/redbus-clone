@@ -1,5 +1,8 @@
 export type FAQCategory = 'General' | 'Ticket-related' | 'Payment' | 'Cancellation & Refund'
 
+/** Tab order for the FAQ section; the first one is selected by default. */
+export const faqCategories: FAQCategory[] = ['General', 'Ticket-related', 'Payment', 'Cancellation & Refund']
+
 export interface FAQItem {
   category: FAQCategory
   question: string

@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
-import { faqs } from '../data'
+import { faqCategories, faqs } from '../data'
 import type { FAQCategory, FAQItem } from '../data'
 
-const CATEGORIES: FAQCategory[] = ['General', 'Ticket-related', 'Payment', 'Cancellation & Refund']
+const CATEGORIES = faqCategories
 
 function categoryTabId(category: FAQCategory) {
   return `faq-tab-${category.replace(/[^a-zA-Z]+/g, '-').toLowerCase()}`

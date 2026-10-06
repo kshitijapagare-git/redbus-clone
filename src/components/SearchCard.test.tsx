@@ -109,6 +109,18 @@ describe('SearchCard', () => {
     expect(toInput).toHaveValue('Pune')
   })
 
+  it('leaves the emptied field blank when swapping with only one city selected', () => {
+    render(<SearchCard />)
+    const fromInput = screen.getByRole('combobox', { name: 'From' })
+    const toInput = screen.getByRole('combobox', { name: 'To' })
+    selectCity(toInput, 'ben', 'Bengaluru')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Swap cities' }))
+
+    expect(fromInput).toHaveValue('Bengaluru')
+    expect(toInput).toHaveValue('')
+  })
+
   it('recomputes validation errors for the swapped state after swap', () => {
     render(<SearchCard />)
     const fromInput = screen.getByRole('combobox', { name: 'From' })

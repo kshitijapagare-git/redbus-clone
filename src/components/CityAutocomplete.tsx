@@ -36,7 +36,10 @@ function CityAutocomplete({ id, label, cities, value, onChange }: CityAutocomple
     showListbox && filteredCities[activeIndex] ? `${id}-option-${activeIndex}` : undefined
 
   const selectCity = (city: City) => {
-    setTypedText(city.name)
+    // Once selected, the displayed name comes from `value`. Clear the typed
+    // text so a later external reset to null (e.g. a swap with an empty
+    // field) shows an empty input rather than this city's stale name.
+    setTypedText('')
     onChange(city.id)
     setIsOpen(false)
     setActiveIndex(0)

@@ -47,6 +47,6 @@ describe('TrainsPage', () => {
 
   it('shows the Offers component content below the search card', () => {
     render(<TrainsPage />)
-    expect(screen.getByText('Offers for you')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Exciting offers and discounts' })).toBeInTheDocument()
   })
 })

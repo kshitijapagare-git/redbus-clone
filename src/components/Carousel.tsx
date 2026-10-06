@@ -1,7 +1,5 @@
-import { useRef, useState } from 'react'
-import type { KeyboardEvent, ReactNode, TouchEvent } from 'react'
-
-export const SWIPE_THRESHOLD = 50
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { KeyboardEvent, ReactNode } from 'react'
 
 export interface CarouselProps<T> {
   items: T[]
@@ -12,6 +10,15 @@ export interface CarouselProps<T> {
   getKey?: (item: T, index: number) => string | number
 }
 
+// A pixel of slack so sub-pixel scroll positions still count as "at the edge".
+const EDGE_TOLERANCE = 1
+
+/**
+ * Horizontally scrolling list of cards. The arrows reflect the track's real
+ * scroll position, so they stay correct however the track moves: arrow
+ * buttons, the keyboard, a touch swipe (native overflow scrolling) or a
+ * resize that makes every card fit.
+ */
 function Carousel<T>({
   items,
   renderItem,
@@ -19,27 +26,60 @@ function Carousel<T>({
   nextLabel = 'Next',
   getKey,
 }: CarouselProps<T>) {
-  const [currentIndex, setCurrentIndex] = useState(0)
   const trackRef = useRef<HTMLUListElement>(null)
   const itemRefs = useRef<(HTMLLIElement | null)[]>([])
-  const touchStartXRef = useRef<number | null>(null)
+  const [canGoPrev, setCanGoPrev] = useState(false)
+  const [canGoNext, setCanGoNext] = useState(false)
 
-  const canGoPrev = currentIndex > 0
-  const canGoNext = currentIndex < items.length - 1
+  const updateArrows = useCallback(() => {
+    const track = trackRef.current
+    if (!track) return
+    setCanGoPrev(track.scrollLeft > EDGE_TOLERANCE)
+    setCanGoNext(track.scrollLeft + track.clientWidth < track.scrollWidth - EDGE_TOLERANCE)
+  }, [])
 
-  const goTo = (index: number) => {
-    const clamped = Math.max(0, Math.min(items.length - 1, index))
-    setCurrentIndex(clamped)
-    const target = itemRefs.current[clamped]
-    target?.scrollIntoView?.({ behavior: 'smooth', inline: 'start', block: 'nearest' })
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    updateArrows()
+    track.addEventListener('scroll', updateArrows, { passive: true })
+    window.addEventListener('resize', updateArrows)
+    return () => {
+      track.removeEventListener('scroll', updateArrows)
+      window.removeEventListener('resize', updateArrows)
+    }
+  }, [updateArrows, items.length])
+
+  // One step is the distance between two neighbouring cards (card width plus
+  // the gap), falling back to most of the visible width.
+  const stepSize = () => {
+    const track = trackRef.current
+    const [first, second] = itemRefs.current
+    if (first && second && second.offsetLeft > first.offsetLeft) {
+      return second.offsetLeft - first.offsetLeft
+    }
+    return track ? track.clientWidth * 0.8 : 0
+  }
+
+  const scrollByStep = (direction: 1 | -1) => {
+    const track = trackRef.current
+    if (!track) return
+    const maxLeft = track.scrollWidth - track.clientWidth
+    const left = Math.max(0, Math.min(maxLeft, track.scrollLeft + direction * stepSize()))
+    if (typeof track.scrollTo === 'function') {
+      track.scrollTo({ left, behavior: 'smooth' })
+    } else {
+      track.scrollLeft = left
+      updateArrows()
+    }
   }
 
   const goPrev = () => {
-    if (canGoPrev) goTo(currentIndex - 1)
+    if (canGoPrev) scrollByStep(-1)
   }
 
   const goNext = () => {
-    if (canGoNext) goTo(currentIndex + 1)
+    if (canGoNext) scrollByStep(1)
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -52,32 +92,8 @@ function Carousel<T>({
     }
   }
 
-  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
-    touchStartXRef.current = e.touches[0]?.clientX ?? null
-  }
-
-  const handleTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
-    const startX = touchStartXRef.current
-    touchStartXRef.current = null
-    if (startX === null) return
-    const endX = e.changedTouches[0]?.clientX
-    if (endX === undefined) return
-    const diff = startX - endX
-    if (diff > SWIPE_THRESHOLD) {
-      goNext()
-    } else if (diff < -SWIPE_THRESHOLD) {
-      goPrev()
-    }
-  }
-
   return (
-    <div
-      className="carousel"
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
+    <div className="carousel" tabIndex={0} onKeyDown={handleKeyDown}>
       <ul className="carousel-track" ref={trackRef}>
         {items.map((item, index) => (
           <li

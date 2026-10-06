@@ -49,4 +49,8 @@ describe('formatRoomsGuestsSummary', () => {
   it('formats multiple rooms as plural "Rooms"', () => {
     expect(formatRoomsGuestsSummary(2, 3)).toBe('2 Rooms · 3 Adults')
   })
+
+  it('formats a single adult as singular "Adult"', () => {
+    expect(formatRoomsGuestsSummary(1, 1)).toBe('1 Room · 1 Adult')
+  })
 })

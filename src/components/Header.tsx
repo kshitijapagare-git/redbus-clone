@@ -68,6 +68,9 @@ function Header() {
       const panel = panelRef.current
       const button = menuButtonRef.current
       if (panel && !panel.contains(target) && button !== target && !button?.contains(target)) {
+        // Stop the browser's default mousedown focus change, which would
+        // otherwise move focus to the clicked spot after we restore it.
+        e.preventDefault()
         closeMenu()
       }
     }

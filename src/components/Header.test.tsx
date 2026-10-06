@@ -97,7 +97,8 @@ describe('Header', () => {
     fireEvent.click(menuButton)
     expect(screen.getByRole('dialog', { name: 'Menu' })).toBeInTheDocument()
 
-    fireEvent.mouseDown(document.body)
+    // false = default prevented, so the browser won't move focus to the tapped spot afterwards.
+    expect(fireEvent.mouseDown(document.body)).toBe(false)
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(menuButton).toHaveFocus()

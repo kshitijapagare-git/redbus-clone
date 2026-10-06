@@ -32,7 +32,8 @@ describe('WomenInfoDialog', () => {
   it('calls onClose when the backdrop is clicked', () => {
     const onClose = vi.fn()
     render(<WomenInfoDialog isOpen onClose={onClose} />)
-    fireEvent.mouseDown(document.body)
+    // false = default prevented, so the browser won't move focus to the clicked spot afterwards.
+    expect(fireEvent.mouseDown(document.body)).toBe(false)
     expect(onClose).toHaveBeenCalledTimes(1)
   })
 

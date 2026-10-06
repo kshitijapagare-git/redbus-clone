@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import GovernmentBusesSection from './GovernmentBusesSection'
 import { governmentBusOperators } from '../data'
+import { mockCarouselLayout } from '../test-utils/carouselLayout'
 
 describe('GovernmentBusesSection', () => {
   it('renders a card for each government bus operator from data', () => {
@@ -18,7 +19,9 @@ describe('GovernmentBusesSection', () => {
   })
 
   it('scrolls through the cards via the carousel controls, hiding Prev at the start and Next at the end', () => {
-    render(<GovernmentBusesSection />)
+    const { container } = render(<GovernmentBusesSection />)
+    // One card visible at a time, so it takes (length - 1) steps to reach the end.
+    mockCarouselLayout(container, { clientWidth: 100, step: 100 })
 
     expect(screen.queryByRole('button', { name: 'Previous' })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument()

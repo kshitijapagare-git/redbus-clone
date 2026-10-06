@@ -1,3 +1,34 @@
+export interface AboutRedBusSubsection {
+  heading: string
+  /** Rendered as a paragraph under the heading. Omitted for the steps subsection. */
+  body?: string
+  /** Renders the numbered booking steps instead of a paragraph. */
+  showsSteps?: boolean
+}
+
+/** The About redBus subsections, in display order. */
+export const aboutRedBusSubsections: AboutRedBusSubsection[] = [
+  {
+    heading: 'Why Choose redBus for Bus Booking?',
+    body:
+      'With thousands of trusted operators, live seat selection and 24x7 customer support, redBus makes bus ticket booking fast, transparent and reliable.',
+  },
+  {
+    heading: 'Why Choose redRail for Train Ticket Booking?',
+    body:
+      'redRail brings the same ease of booking to train travel, with real-time availability, PNR status checks and running status updates in one place.',
+  },
+  {
+    heading: 'How to Book Bus Tickets and Train Tickets Online on redBus?',
+    showsSteps: true,
+  },
+  {
+    heading: 'Exclusive Offers on redBus',
+    body:
+      'Unlock exclusive discounts and cashback offers on every booking with redBus coupon codes, applied automatically at checkout when eligible.',
+  },
+]
+
 export interface AboutRedBusStep {
   step: number
   text: string

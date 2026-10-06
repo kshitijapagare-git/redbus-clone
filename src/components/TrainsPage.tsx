@@ -19,7 +19,7 @@ function TrainsPage() {
         <div className="quiz-tab-banner">Book Ticket, Play Quiz &amp; Win Real Gold!</div>
         <TrainsSearchCard />
       </div>
-      <Offers />
+      <Offers title="Exciting offers and discounts" />
     </main>
   )
 }

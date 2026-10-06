@@ -50,6 +50,9 @@ function RoomsGuestsPanel({
       const panel = panelRef.current
       const trigger = triggerRef.current
       if (panel && !panel.contains(target) && trigger !== target && !trigger?.contains(target)) {
+        // Stop the browser's default mousedown focus change, which would
+        // otherwise move focus to the clicked spot after we restore it.
+        e.preventDefault()
         closeAndRestoreFocus()
       }
     }

@@ -20,5 +20,6 @@ export function clampAdultsPerRoom(n: number): number {
  */
 export function formatRoomsGuestsSummary(rooms: number, adultsPerRoom: number): string {
   const roomLabel = rooms === 1 ? 'Room' : 'Rooms'
-  return `${rooms} ${roomLabel} · ${adultsPerRoom} Adults`
+  const adultLabel = adultsPerRoom === 1 ? 'Adult' : 'Adults'
+  return `${rooms} ${roomLabel} · ${adultsPerRoom} ${adultLabel}`
 }

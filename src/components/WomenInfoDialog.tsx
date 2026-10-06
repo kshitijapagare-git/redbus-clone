@@ -25,6 +25,9 @@ function WomenInfoDialog({ isOpen, onClose }: WomenInfoDialogProps) {
       const target = e.target as Node
       const panel = panelRef.current
       if (panel && !panel.contains(target)) {
+        // Stop the browser's default mousedown focus change, which would
+        // otherwise move focus to the clicked spot after we restore it.
+        e.preventDefault()
         onClose()
       }
     }
