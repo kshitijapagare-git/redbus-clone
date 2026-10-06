@@ -45,4 +45,32 @@ describe('App footer', () => {
     expect(footer).toBeInTheDocument()
     expect(footer).toHaveTextContent(FOOTER_TEXT)
   })
+
+  it('renders the Home route sections in the required order after Boarding Points', () => {
+    window.history.replaceState(null, '', '/')
+    render(<App />)
+
+    const headingNames = screen
+      .getAllByRole('heading', { level: 2 })
+      .map((heading) => heading.textContent)
+
+    const expectedOrderSubset = [
+      'Offers for you',
+      'Boarding Points',
+      'Introducing Getaways',
+      'Book now to get confirmed ticket',
+      "What's new",
+      'Government Buses',
+      'Testimonials',
+      "redBus: India's Leading Online Bus Booking and Train Ticket Booking Platform",
+      'FAQs related to Bus Tickets Booking',
+      'Popular Searches',
+    ]
+
+    const indices = expectedOrderSubset.map((name) => headingNames.indexOf(name))
+    indices.forEach((index) => expect(index).toBeGreaterThanOrEqual(0))
+    for (let i = 1; i < indices.length; i += 1) {
+      expect(indices[i]).toBeGreaterThan(indices[i - 1])
+    }
+  })
 })

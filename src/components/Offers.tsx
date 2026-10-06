@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
+import { OFFERS_PATH, navigateTo } from '../lib/route'
 
 export type OfferCategory = 'bus' | 'train'
 
@@ -77,7 +78,15 @@ function Offers({ offers = defaultOffers }: OffersProps) {
     <section className="container section">
       <div className="section-head">
         <h2>Offers for you</h2>
-        <a href="#">View more</a>
+        <a
+          href={OFFERS_PATH}
+          onClick={(e) => {
+            e.preventDefault()
+            navigateTo(OFFERS_PATH)
+          }}
+        >
+          View more
+        </a>
       </div>
       <div className="tabs" role="tablist">
         {tabs.map((tab) => (

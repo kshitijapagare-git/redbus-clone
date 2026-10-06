@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent } from 'react'
-import { ACCOUNT_PATH, HOME_PATH, HOTELS_PATH, TRAINS_PATH, navigateTo, useCurrentPath } from '../lib/route'
+import { ACCOUNT_PATH, HELP_PATH, HOME_PATH, HOTELS_PATH, TRAINS_PATH, navigateTo, useCurrentPath } from '../lib/route'
 
 const MOBILE_BREAKPOINT = 900
 const MOBILE_PANEL_ID = 'header-mobile-panel'
@@ -82,14 +82,6 @@ function Header() {
     }
   }, [isMenuOpen])
 
-  // Anchors fire a native click on Enter but not on Space, so Space needs
-  // explicit handling here to close the panel; Enter is covered by onClick.
-  const handleLinkKeyDown = (e: ReactKeyboardEvent<HTMLAnchorElement>) => {
-    if (e.key === ' ') {
-      closeMenu()
-    }
-  }
-
   const currentPath = useCurrentPath()
   const isHotelsActive = currentPath === HOTELS_PATH
   const isTrainsActive = currentPath === TRAINS_PATH
@@ -157,7 +149,13 @@ function Header() {
             >
               ☰ Bookings
             </a>
-            <a href="#">ⓘ Help</a>
+            <a
+              href={HELP_PATH}
+              onClick={handleNavClick(HELP_PATH)}
+              onKeyDown={handleNavKeyDown(HELP_PATH)}
+            >
+              ⓘ Help
+            </a>
             <a
               className={isAccountActive ? 'active' : ''}
               href={ACCOUNT_PATH}
@@ -195,7 +193,11 @@ function Header() {
               >
                 ☰ Bookings
               </a>
-              <a href="#" onClick={closeMenu} onKeyDown={handleLinkKeyDown}>
+              <a
+                href={HELP_PATH}
+                onClick={handleNavClick(HELP_PATH)}
+                onKeyDown={handleNavKeyDown(HELP_PATH)}
+              >
                 ⓘ Help
               </a>
               <a

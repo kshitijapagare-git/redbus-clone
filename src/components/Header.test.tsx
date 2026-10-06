@@ -215,6 +215,30 @@ describe('Header', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
+  it('navigates to /help when the desktop Help link is clicked', () => {
+    setViewportWidth(1200)
+    render(<Header />)
+
+    const helpLink = screen.getByRole('link', { name: 'ⓘ Help' })
+    fireEvent.click(helpLink)
+
+    expect(window.location.pathname).toBe('/help')
+  })
+
+  it('navigates to /help and closes the menu when the mobile Help link is clicked', () => {
+    setViewportWidth(899)
+    render(<Header />)
+
+    const menuButton = screen.getByRole('button', { name: 'Menu' })
+    fireEvent.click(menuButton)
+
+    const helpLink = screen.getByRole('link', { name: 'ⓘ Help' })
+    fireEvent.click(helpLink)
+
+    expect(window.location.pathname).toBe('/help')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
   it('does not mark any nav-main item as active while on /account', () => {
     window.history.replaceState(null, '', '/account')
     setViewportWidth(1200)

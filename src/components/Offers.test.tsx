@@ -2,8 +2,27 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Offers, { defaultOffers } from './Offers'
 import type { Offer } from './Offers'
+import { OFFERS_PATH } from '../lib/route'
 
 describe('Offers', () => {
+  beforeEach(() => {
+    window.history.replaceState(null, '', '/')
+  })
+
+  afterEach(() => {
+    window.history.replaceState(null, '', '/')
+  })
+
+  it('has a "View more" link pointing at OFFERS_PATH that navigates there on click', () => {
+    render(<Offers />)
+    const link = screen.getByRole('link', { name: 'View more' })
+    expect(link).toHaveAttribute('href', OFFERS_PATH)
+
+    fireEvent.click(link)
+
+    expect(window.location.pathname).toBe(OFFERS_PATH)
+  })
+
   it('shows every offer on the All tab', () => {
     render(<Offers />)
     const tab = screen.getByRole('tab', { name: 'All' })
