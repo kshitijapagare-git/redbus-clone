@@ -10,11 +10,13 @@ function setViewportWidth(width: number) {
 describe('Header', () => {
   beforeEach(() => {
     setViewportWidth(1200)
+    window.history.replaceState(null, '', '/')
   })
 
   afterEach(() => {
     document.body.style.overflow = ''
     setViewportWidth(1200)
+    window.history.replaceState(null, '', '/')
   })
 
   it('does not render the menu button at widths >= 900px, and leaves nav-side unchanged', () => {
@@ -163,5 +165,67 @@ describe('Header', () => {
     first.focus()
     fireEvent.keyDown(document, { key: 'Tab', shiftKey: true })
     expect(last).toHaveFocus()
+  })
+
+  it('navigates to /account when the desktop Account link is clicked', () => {
+    setViewportWidth(1200)
+    render(<Header />)
+
+    const accountLink = screen.getByRole('link', { name: '◉ Account' })
+    fireEvent.click(accountLink)
+
+    expect(window.location.pathname).toBe('/account')
+  })
+
+  it('navigates to /account when the desktop Bookings link is clicked', () => {
+    setViewportWidth(1200)
+    render(<Header />)
+
+    const bookingsLink = screen.getByRole('link', { name: '☰ Bookings' })
+    fireEvent.click(bookingsLink)
+
+    expect(window.location.pathname).toBe('/account')
+  })
+
+  it('navigates to /account and closes the menu when the mobile Account link is clicked', () => {
+    setViewportWidth(899)
+    render(<Header />)
+
+    const menuButton = screen.getByRole('button', { name: 'Menu' })
+    fireEvent.click(menuButton)
+
+    const accountLink = screen.getByRole('link', { name: '◉ Account' })
+    fireEvent.click(accountLink)
+
+    expect(window.location.pathname).toBe('/account')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('navigates to /account and closes the menu when the mobile Bookings link is clicked', () => {
+    setViewportWidth(899)
+    render(<Header />)
+
+    const menuButton = screen.getByRole('button', { name: 'Menu' })
+    fireEvent.click(menuButton)
+
+    const bookingsLink = screen.getByRole('link', { name: '☰ Bookings' })
+    fireEvent.click(bookingsLink)
+
+    expect(window.location.pathname).toBe('/account')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('does not mark any nav-main item as active while on /account', () => {
+    window.history.replaceState(null, '', '/account')
+    setViewportWidth(1200)
+    render(<Header />)
+
+    const busLink = screen.getByText('Bus tickets').closest('a')
+    const trainLink = screen.getByText('Train tickets').closest('a')
+    const hotelsLink = screen.getByText('Hotels').closest('a')
+
+    expect(busLink?.className).not.toContain('active')
+    expect(trainLink?.className).not.toContain('active')
+    expect(hotelsLink?.className).not.toContain('active')
   })
 })

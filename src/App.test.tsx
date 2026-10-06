@@ -35,4 +35,14 @@ describe('App footer', () => {
     expect(footer).toBeInTheDocument()
     expect(footer).toHaveTextContent(FOOTER_TEXT)
   })
+
+  it('renders the header and footer with the exact text on the Account route', () => {
+    window.history.replaceState(null, '', '/account')
+    render(<App />)
+    const header = screen.getByRole('banner')
+    expect(header).toBeInTheDocument()
+    const footer = screen.getByRole('contentinfo')
+    expect(footer).toBeInTheDocument()
+    expect(footer).toHaveTextContent(FOOTER_TEXT)
+  })
 })

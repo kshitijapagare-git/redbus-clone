@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import AccountPage from './components/AccountPage'
 import BoardingPointList from './components/BoardingPointList'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -8,7 +9,7 @@ import SearchCard from './components/SearchCard'
 import TrainsPage from './components/TrainsPage'
 import TrainsSearchPage from './components/TrainsSearchPage'
 import { boardingPoints, cities } from './data'
-import { HOTELS_PATH, TRAINS_PATH, TRAINS_SEARCH_PATH, useCurrentPath } from './lib/route'
+import { ACCOUNT_PATH, HOTELS_PATH, TRAINS_PATH, TRAINS_SEARCH_PATH, useCurrentPath } from './lib/route'
 import type { City } from './types'
 import './App.css'
 
@@ -20,6 +21,8 @@ function App() {
 
   if (currentPath === HOTELS_PATH) {
     pageContent = <HotelsPage />
+  } else if (currentPath === ACCOUNT_PATH) {
+    pageContent = <AccountPage />
   } else if (currentPath === TRAINS_SEARCH_PATH) {
     pageContent = <TrainsSearchPage />
   } else if (currentPath === TRAINS_PATH) {

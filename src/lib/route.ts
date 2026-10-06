@@ -4,6 +4,7 @@ export const HOME_PATH = '/'
 export const HOTELS_PATH = '/hotels'
 export const TRAINS_PATH = '/trains'
 export const TRAINS_SEARCH_PATH = '/trains/search'
+export const ACCOUNT_PATH = '/account'
 
 /**
  * Navigates to `path` using the History API and notifies any mounted

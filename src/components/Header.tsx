@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent } from 'react'
-import { HOME_PATH, HOTELS_PATH, TRAINS_PATH, navigateTo, useCurrentPath } from '../lib/route'
+import { ACCOUNT_PATH, HOME_PATH, HOTELS_PATH, TRAINS_PATH, navigateTo, useCurrentPath } from '../lib/route'
 
 const MOBILE_BREAKPOINT = 900
 const MOBILE_PANEL_ID = 'header-mobile-panel'
@@ -93,7 +93,8 @@ function Header() {
   const currentPath = useCurrentPath()
   const isHotelsActive = currentPath === HOTELS_PATH
   const isTrainsActive = currentPath === TRAINS_PATH
-  const isHomeActive = !isHotelsActive && !isTrainsActive
+  const isHomeActive = currentPath === HOME_PATH
+  const isAccountActive = currentPath === ACCOUNT_PATH
 
   const handleNavClick = (path: string) => (e: ReactMouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
@@ -148,9 +149,23 @@ function Header() {
         </nav>
         {!isMobile && (
           <nav className="nav-side">
-            <a href="#">☰ Bookings</a>
+            <a
+              className={isAccountActive ? 'active' : ''}
+              href={ACCOUNT_PATH}
+              onClick={handleNavClick(ACCOUNT_PATH)}
+              onKeyDown={handleNavKeyDown(ACCOUNT_PATH)}
+            >
+              ☰ Bookings
+            </a>
             <a href="#">ⓘ Help</a>
-            <a href="#">◉ Account</a>
+            <a
+              className={isAccountActive ? 'active' : ''}
+              href={ACCOUNT_PATH}
+              onClick={handleNavClick(ACCOUNT_PATH)}
+              onKeyDown={handleNavKeyDown(ACCOUNT_PATH)}
+            >
+              ◉ Account
+            </a>
           </nav>
         )}
         {isMobile && (
@@ -172,13 +187,22 @@ function Header() {
           <div className="mobile-panel-backdrop" aria-hidden="true" />
           <div id={MOBILE_PANEL_ID} ref={panelRef} role="dialog" aria-label="Menu" className="mobile-panel">
             <nav className="mobile-panel-nav">
-              <a ref={firstLinkRef} href="#" onClick={closeMenu} onKeyDown={handleLinkKeyDown}>
+              <a
+                ref={firstLinkRef}
+                href={ACCOUNT_PATH}
+                onClick={handleNavClick(ACCOUNT_PATH)}
+                onKeyDown={handleNavKeyDown(ACCOUNT_PATH)}
+              >
                 ☰ Bookings
               </a>
               <a href="#" onClick={closeMenu} onKeyDown={handleLinkKeyDown}>
                 ⓘ Help
               </a>
-              <a href="#" onClick={closeMenu} onKeyDown={handleLinkKeyDown}>
+              <a
+                href={ACCOUNT_PATH}
+                onClick={handleNavClick(ACCOUNT_PATH)}
+                onKeyDown={handleNavKeyDown(ACCOUNT_PATH)}
+              >
                 ◉ Account
               </a>
             </nav>
