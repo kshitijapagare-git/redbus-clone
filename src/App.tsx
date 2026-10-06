@@ -15,9 +15,11 @@ import HelpPage from './components/HelpPage'
 import HotelsPage from './components/HotelsPage'
 import Offers from './components/Offers'
 import OffersPage from './components/OffersPage'
+import PassengerDetailsPage from './components/PassengerDetailsPage'
 import PopularListsSection from './components/PopularListsSection'
 import RedDealsSection from './components/RedDealsSection'
 import SearchCard from './components/SearchCard'
+import SeatSelectionPage from './components/SeatSelectionPage'
 import TestimonialsSection from './components/TestimonialsSection'
 import TrainsPage from './components/TrainsPage'
 import TrainsSearchPage from './components/TrainsSearchPage'
@@ -31,6 +33,8 @@ import {
   SEARCH_PATH,
   TRAINS_PATH,
   TRAINS_SEARCH_PATH,
+  matchPassengerDetailsPath,
+  matchSeatSelectionPath,
   useCurrentPath,
 } from './lib/route'
 import type { City } from './types'
@@ -41,8 +45,14 @@ function App() {
   const currentPath = useCurrentPath()
 
   let pageContent
+  const seatSelectionBusId = matchSeatSelectionPath(currentPath)
+  const passengerDetailsBusId = matchPassengerDetailsPath(currentPath)
 
-  if (currentPath === HOTELS_PATH) {
+  if (passengerDetailsBusId !== null) {
+    pageContent = <PassengerDetailsPage busId={passengerDetailsBusId} />
+  } else if (seatSelectionBusId !== null) {
+    pageContent = <SeatSelectionPage busId={seatSelectionBusId} />
+  } else if (currentPath === HOTELS_PATH) {
     pageContent = <HotelsPage />
   } else if (currentPath === ACCOUNT_PATH) {
     pageContent = <AccountPage />

@@ -61,6 +61,33 @@ describe('withBoardingPointId', () => {
   })
 })
 
+describe('parseBoardingPointId with a custom paramKey', () => {
+  it('reads a "dp" param independently of any "bp" value', () => {
+    expect(parseBoardingPointId('?bp=1&dp=7', 'dp')).toBe(7)
+    expect(parseBoardingPointId('?bp=1&dp=7', 'bp')).toBe(1)
+  })
+
+  it('returns null when the custom key is absent', () => {
+    expect(parseBoardingPointId('?bp=1', 'dp')).toBeNull()
+  })
+})
+
+describe('withBoardingPointId with a custom paramKey', () => {
+  it('sets a "dp" param without disturbing an existing "bp" value', () => {
+    const result = withBoardingPointId('?bp=1', 7, 'dp')
+    const params = new URLSearchParams(result)
+    expect(params.get('bp')).toBe('1')
+    expect(params.get('dp')).toBe('7')
+  })
+
+  it('clears only the "dp" param when called with null', () => {
+    const result = withBoardingPointId('?bp=1&dp=7', null, 'dp')
+    const params = new URLSearchParams(result)
+    expect(params.get('bp')).toBe('1')
+    expect(params.has('dp')).toBe(false)
+  })
+})
+
 describe('resolveSelectedBoardingPoint', () => {
   it('returns null when id does not match any boarding point', () => {
     expect(resolveSelectedBoardingPoint(999, boardingPoints, 1)).toBeNull()

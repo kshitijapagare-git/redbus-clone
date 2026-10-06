@@ -1,4 +1,5 @@
 import type { Bus } from '../types'
+import { buildSeatSelectionUrl, navigateTo } from '../lib/route'
 
 export interface BusCardProps {
   bus: Bus
@@ -20,6 +21,13 @@ function BusCard({ bus }: BusCardProps) {
         <span className="bus-card-rating">★ {bus.rating.toFixed(1)}</span>
         <span className="bus-card-fare">₹{bus.fare}</span>
         <span className="bus-card-seats">{bus.seatsAvailable} seats left</span>
+        <button
+          type="button"
+          className="bus-card-view-seats-btn"
+          onClick={() => navigateTo(buildSeatSelectionUrl(bus.id, {}))}
+        >
+          View seats
+        </button>
       </div>
     </li>
   )

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { parseBoardingPointId, withBoardingPointId } from '../lib/boardingPointSelection'
+import { BOARDING_POINT_PARAM, parseBoardingPointId, withBoardingPointId } from '../lib/boardingPointSelection'
 
 export interface UseBoardingPointSelectionResult {
   rawId: number | null
@@ -7,12 +7,12 @@ export interface UseBoardingPointSelectionResult {
   clear: () => void
 }
 
-function readRawId(): number | null {
-  return parseBoardingPointId(window.location.search)
+function readRawId(paramKey: string): number | null {
+  return parseBoardingPointId(window.location.search, paramKey)
 }
 
-function writeBoardingPointId(id: number | null): void {
-  const newSearch = withBoardingPointId(window.location.search, id)
+function writeBoardingPointId(id: number | null, paramKey: string): void {
+  const newSearch = withBoardingPointId(window.location.search, id, paramKey)
   const newUrl = `${window.location.pathname}${newSearch}${window.location.hash}`
   window.history.replaceState(window.history.state, '', newUrl)
   // There is no router in this app, so other mounted instances of this hook
@@ -23,28 +23,33 @@ function writeBoardingPointId(id: number | null): void {
 }
 
 /** Usable outside React render for one-off side effects (e.g. clearing on search change). */
-export function clearBoardingPointSelection(): void {
-  writeBoardingPointId(null)
+export function clearBoardingPointSelection(paramKey: string = BOARDING_POINT_PARAM): void {
+  writeBoardingPointId(null, paramKey)
 }
 
-export function useBoardingPointSelection(): UseBoardingPointSelectionResult {
-  const [rawId, setRawId] = useState<number | null>(() => readRawId())
+export function useBoardingPointSelection(
+  paramKey: string = BOARDING_POINT_PARAM,
+): UseBoardingPointSelectionResult {
+  const [rawId, setRawId] = useState<number | null>(() => readRawId(paramKey))
 
   useEffect(() => {
     const handlePopState = () => {
-      setRawId(readRawId())
+      setRawId(readRawId(paramKey))
     }
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
-  }, [])
+  }, [paramKey])
 
-  const select = useCallback((id: number) => {
-    writeBoardingPointId(id)
-  }, [])
+  const select = useCallback(
+    (id: number) => {
+      writeBoardingPointId(id, paramKey)
+    },
+    [paramKey],
+  )
 
   const clear = useCallback(() => {
-    clearBoardingPointSelection()
-  }, [])
+    clearBoardingPointSelection(paramKey)
+  }, [paramKey])
 
   return { rawId, select, clear }
 }

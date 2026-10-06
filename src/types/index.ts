@@ -37,3 +37,26 @@ export interface Bus {
   rating: number
   isWomenFriendly: boolean
 }
+
+export type SeatDeckName = 'lower' | 'upper'
+
+export interface Seat {
+  /** Unique across all decks of a bus, e.g. 'L4' or 'U2'. */
+  id: string
+  /** Display label, e.g. the seat number within its deck/row. */
+  label: string
+  deck: SeatDeckName
+  womenOnly: boolean
+}
+
+export type SeatMapMode = 'seater' | 'sleeper' | 'mixed'
+
+export interface BusSeatMap {
+  mode: SeatMapMode
+  decks: {
+    lower: Seat[]
+    upper?: Seat[]
+  }
+  /** Seat ids (from either deck) that are already booked. */
+  booked: string[]
+}

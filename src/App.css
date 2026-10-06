@@ -865,3 +865,179 @@ button { font: inherit; cursor: pointer; }
   .festival-trains-months { flex-direction: column; }
   .app-download-banner-inner { flex-direction: column; align-items: flex-start; }
 }
+
+/* Seat map */
+.seat-selection-page { padding: 32px 0 80px; overflow-x: hidden; max-width: 100vw; }
+.seat-map {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  max-width: 100%;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.seat-map-deck-tabs { display: flex; gap: 10px; }
+.seat-map-deck-tab {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.seat-map-deck-tab.active { background: var(--red-soft); border-color: var(--red); }
+.seat-map-limit-message { margin: 0; color: var(--red); font-size: 13px; font-weight: 700; }
+.seat-map-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 44px);
+  gap: 10px;
+  max-width: 100%;
+}
+.seat-map-seat-wrap { position: relative; }
+.seat-map-seat {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+.seat-map-seat-available { background: #fff; }
+.seat-map-seat-booked { background: #ddd; color: #999; cursor: not-allowed; }
+.seat-map-seat-women-only { background: #fde3ec; border-color: #e18aa8; }
+.seat-map-seat-selected { background: var(--red); border-color: var(--red); color: #fff; }
+.seat-map-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1d1d1d;
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  z-index: 5;
+}
+.seat-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; }
+.seat-legend-item { display: flex; align-items: center; gap: 6px; }
+.seat-swatch { width: 16px; height: 16px; border-radius: 4px; display: inline-block; border: 1px solid var(--line); }
+.seat-swatch-available { background: #fff; }
+.seat-swatch-booked { background: #ddd; }
+.seat-swatch-women-only { background: #fde3ec; border-color: #e18aa8; }
+.seat-swatch-selected { background: var(--red); border-color: var(--red); }
+
+@media (max-width: 480px) {
+  .seat-map { max-width: 100%; }
+  .seat-map-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Seat-selection page layout */
+.seat-selection-page-inner { display: flex; flex-direction: column; gap: 16px; max-width: 100%; }
+.seat-selection-bus-summary { margin: 0; color: var(--muted); font-size: 14px; font-weight: 600; }
+.seat-selection-main { display: flex; align-items: flex-start; gap: 20px; max-width: 100%; }
+.seat-selection-left { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 20px; max-width: 100%; }
+.seat-selection-points { display: flex; flex-direction: column; gap: 20px; max-width: 100%; }
+
+/* Point picker (boarding/dropping) */
+.point-picker { display: flex; flex-direction: column; gap: 10px; max-width: 100%; }
+.point-picker-label { margin: 0; font-size: 16px; font-weight: 700; }
+.point-picker-grid { margin: 0 0 0; }
+
+/* Booking summary panel */
+.booking-summary-panel {
+  flex: 0 0 300px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: sticky;
+  top: 16px;
+}
+.booking-summary-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; }
+.booking-summary-label { color: var(--muted); }
+.booking-summary-value { font-weight: 700; text-align: right; }
+.booking-summary-seats .booking-summary-value { word-break: break-word; }
+.booking-summary-total { border-top: 1px solid var(--line); padding-top: 10px; font-size: 16px; }
+.booking-summary-total .booking-summary-value { color: var(--red); }
+.booking-summary-continue-btn {
+  margin-top: 6px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 14px 0;
+}
+.booking-summary-continue-btn:disabled { background: #ccc; color: #888; cursor: not-allowed; }
+
+@media (max-width: 899px) {
+  .seat-selection-main { flex-direction: column; }
+  .booking-summary-panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 15;
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 100vw;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -4px 24px rgb(0 0 0 / 0.15);
+  }
+  .seat-selection-page { padding-bottom: 260px; }
+}
+
+/* Passenger details page */
+.passenger-details-page { padding: 32px 0 80px; overflow-x: hidden; max-width: 100vw; }
+.passenger-details-page-inner { display: flex; flex-direction: column; gap: 16px; max-width: 100%; }
+.passenger-details-bus-summary { margin: 0; color: var(--muted); font-size: 14px; font-weight: 600; }
+.passenger-form { display: flex; flex-direction: column; gap: 20px; max-width: 100%; }
+.passenger-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.passenger-seat-card, .passenger-contact-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.passenger-seat-card legend, .passenger-contact-card legend {
+  font-weight: 700;
+  font-size: 15px;
+  padding: 0;
+}
+.passenger-field { display: flex; flex-direction: column; gap: 4px; }
+.passenger-field label { font-size: 13px; font-weight: 600; color: var(--muted); }
+.passenger-field input, .passenger-field select {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 14px;
+  background: #fff;
+}
+.passenger-submit-btn {
+  align-self: flex-start;
+  border: 0;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 14px 32px;
+}
+
+@media (max-width: 480px) {
+  .passenger-form-grid { grid-template-columns: 1fr; }
+}

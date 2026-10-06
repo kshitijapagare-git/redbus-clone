@@ -64,4 +64,26 @@ describe('useBoardingPointSelection', () => {
 
     expect(window.location.search).toBe('')
   })
+
+  it('supports an independent "dp" paramKey alongside an existing "bp" value', () => {
+    window.history.replaceState(null, '', '/?bp=5')
+    const { result } = renderHook(() => useBoardingPointSelection('dp'))
+
+    expect(result.current.rawId).toBeNull()
+
+    act(() => {
+      result.current.select(7)
+    })
+
+    expect(window.location.search).toContain('bp=5')
+    expect(window.location.search).toContain('dp=7')
+    expect(result.current.rawId).toBe(7)
+
+    act(() => {
+      result.current.clear()
+    })
+
+    expect(window.location.search).toContain('bp=5')
+    expect(window.location.search).not.toContain('dp=')
+  })
 })
