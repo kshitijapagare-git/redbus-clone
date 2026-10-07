@@ -115,7 +115,7 @@ function BusSearchResultsPage() {
 
               <ul className="bus-list">
                 {sortedBuses.map((bus) => (
-                  <BusCard key={bus.id} bus={bus} />
+                  <BusCard key={bus.id} bus={bus} date={date ?? undefined} />
                 ))}
               </ul>
             </>

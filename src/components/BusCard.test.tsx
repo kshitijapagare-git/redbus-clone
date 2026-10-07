@@ -54,4 +54,17 @@ describe('BusCard', () => {
 
     expect(window.location.pathname).toBe('/search/1/seats')
   })
+
+  it('includes the given date in the seat-selection URL when "View seats" is clicked', () => {
+    render(
+      <ul>
+        <BusCard bus={bus} date="2024-10-07" />
+      </ul>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'View seats' }))
+
+    expect(window.location.pathname).toBe('/search/1/seats')
+    expect(window.location.search).toContain('date=2024-10-07')
+  })
 })

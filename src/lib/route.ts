@@ -33,6 +33,7 @@ export interface BuildSeatSelectionUrlParams {
   seats?: string[]
   bp?: number
   dp?: number
+  date?: string
 }
 
 /** Builds the `/search/:busId/seats` URL, optionally carrying seats/bp/dp query params. */
@@ -47,9 +48,13 @@ export function buildSeatSelectionUrl(busId: number, params: BuildSeatSelectionU
   if (params.dp !== undefined) {
     searchParams.set('dp', String(params.dp))
   }
+  if (params.date !== undefined) {
+    searchParams.set('date', params.date)
+  }
   const query = searchParams.toString()
   return `/search/${busId}/seats${query ? `?${query}` : ''}`
 }
+
 
 const PASSENGER_DETAILS_PATH_PATTERN = /^\/search\/(\d+)\/seats\/passengers$/
 
@@ -65,15 +70,62 @@ export interface BuildPassengerDetailsUrlParams {
   seats: string[]
   bp: number
   dp: number
+  date?: string
 }
 
-/** Builds the `/search/:busId/seats/passengers` URL, carrying the chosen seats/bp/dp. */
+/** Builds the `/search/:busId/seats/passengers` URL, carrying the chosen seats/bp/dp(/date). */
 export function buildPassengerDetailsUrl(busId: number, params: BuildPassengerDetailsUrlParams): string {
   const searchParams = new URLSearchParams()
   searchParams.set('seats', params.seats.join(','))
   searchParams.set('bp', String(params.bp))
   searchParams.set('dp', String(params.dp))
+  if (params.date !== undefined) {
+    searchParams.set('date', params.date)
+  }
   return `/search/${busId}/seats/passengers?${searchParams.toString()}`
+}
+
+const PAYMENT_PATH_PATTERN = /^\/search\/(\d+)\/seats\/payment$/
+
+/** Matches exactly '/search/:busId/seats/payment' with a numeric busId; returns null otherwise. */
+export function matchPaymentPath(pathname: string): number | null {
+  const match = PAYMENT_PATH_PATTERN.exec(pathname)
+  if (!match) return null
+  const busId = Number(match[1])
+  return Number.isFinite(busId) ? busId : null
+}
+
+export interface BuildPaymentUrlParams {
+  seats: string[]
+  bp: number
+  dp: number
+  date?: string
+}
+
+/** Builds the `/search/:busId/seats/payment` URL, carrying the chosen seats/bp/dp(/date). */
+export function buildPaymentUrl(busId: number, params: BuildPaymentUrlParams): string {
+  const searchParams = new URLSearchParams()
+  searchParams.set('seats', params.seats.join(','))
+  searchParams.set('bp', String(params.bp))
+  searchParams.set('dp', String(params.dp))
+  if (params.date !== undefined) {
+    searchParams.set('date', params.date)
+  }
+  return `/search/${busId}/seats/payment?${searchParams.toString()}`
+}
+
+const BOOKING_PATH_PATTERN = /^\/booking\/([^/]+)$/
+
+/** Matches exactly '/booking/:pnr'; returns the pnr string, or null otherwise. */
+export function matchBookingPath(pathname: string): string | null {
+  const match = BOOKING_PATH_PATTERN.exec(pathname)
+  if (!match) return null
+  return match[1]
+}
+
+/** Builds the `/booking/:pnr` URL. */
+export function buildBookingUrl(pnr: string): string {
+  return `/booking/${pnr}`
 }
 
 /** Reads window.location.pathname and re-renders whenever it changes. */

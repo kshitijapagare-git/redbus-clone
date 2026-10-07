@@ -4,6 +4,7 @@ import AccountPage from './components/AccountPage'
 import AppDownloadBanner from './components/AppDownloadBanner'
 import AppPromoStrip from './components/AppPromoStrip'
 import BoardingPointList from './components/BoardingPointList'
+import BookingPage from './components/BookingPage'
 import BusSearchResultsPage from './components/BusSearchResultsPage'
 import FAQsSection from './components/FAQsSection'
 import FestivalTrainsSection from './components/FestivalTrainsSection'
@@ -16,6 +17,7 @@ import HotelsPage from './components/HotelsPage'
 import Offers from './components/Offers'
 import OffersPage from './components/OffersPage'
 import PassengerDetailsPage from './components/PassengerDetailsPage'
+import PaymentPage from './components/PaymentPage'
 import PopularListsSection from './components/PopularListsSection'
 import RedDealsSection from './components/RedDealsSection'
 import SearchCard from './components/SearchCard'
@@ -33,7 +35,9 @@ import {
   SEARCH_PATH,
   TRAINS_PATH,
   TRAINS_SEARCH_PATH,
+  matchBookingPath,
   matchPassengerDetailsPath,
+  matchPaymentPath,
   matchSeatSelectionPath,
   useCurrentPath,
 } from './lib/route'
@@ -47,8 +51,14 @@ function App() {
   let pageContent
   const seatSelectionBusId = matchSeatSelectionPath(currentPath)
   const passengerDetailsBusId = matchPassengerDetailsPath(currentPath)
+  const paymentBusId = matchPaymentPath(currentPath)
+  const bookingPnr = matchBookingPath(currentPath)
 
-  if (passengerDetailsBusId !== null) {
+  if (bookingPnr !== null) {
+    pageContent = <BookingPage pnr={bookingPnr} />
+  } else if (paymentBusId !== null) {
+    pageContent = <PaymentPage busId={paymentBusId} />
+  } else if (passengerDetailsBusId !== null) {
     pageContent = <PassengerDetailsPage busId={passengerDetailsBusId} />
   } else if (seatSelectionBusId !== null) {
     pageContent = <SeatSelectionPage busId={seatSelectionBusId} />

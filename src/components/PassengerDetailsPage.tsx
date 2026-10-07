@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { buses, busesSeats } from '../data'
+import { saveBookingDraft } from '../lib/bookingDraft'
 import { parseSelectedSeatIds, sortSeatIds } from '../lib/seatSelection'
 import {
   validateEmail,
@@ -9,6 +10,7 @@ import {
   validatePassengerGender,
   validatePassengerName,
 } from '../lib/passengerValidation'
+import { buildPaymentUrl, navigateTo } from '../lib/route'
 import type { BusSeatMap } from '../types'
 
 export interface PassengerDetailsPageProps {
@@ -75,6 +77,37 @@ function PassengerDetailsPage({ busId }: PassengerDetailsPageProps) {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setSubmitted(true)
+
+    const allPassengersValid = seatIds.every((seatId) => {
+      const womenOnly = seatWomenOnly(seatMap, seatId)
+      const passenger = getPassenger(seatId)
+      return (
+        !validatePassengerName(passenger.name) &&
+        !validatePassengerAge(passenger.age) &&
+        !validatePassengerGender(passenger.gender, womenOnly)
+      )
+    })
+    const contactValid = !validateEmail(contact.email) && !validateMobileNumber(contact.mobile)
+
+    if (!allPassengersValid || !contactValid) return
+
+    const urlParams = new URLSearchParams(window.location.search)
+    const bp = urlParams.get('bp')
+    const dp = urlParams.get('dp')
+    const date = urlParams.get('date')
+
+    if (bp === null || dp === null) return
+
+    saveBookingDraft({ passengers, contact })
+
+    navigateTo(
+      buildPaymentUrl(busId, {
+        seats: seatIds,
+        bp: Number(bp),
+        dp: Number(dp),
+        ...(date !== null ? { date } : {}),
+      }),
+    )
   }
 
   return (
@@ -194,5 +227,6 @@ function PassengerDetailsPage({ busId }: PassengerDetailsPageProps) {
     </main>
   )
 }
+
 
 export default PassengerDetailsPage

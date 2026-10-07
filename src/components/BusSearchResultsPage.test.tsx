@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import BusSearchResultsPage from './BusSearchResultsPage'
 
@@ -86,5 +86,15 @@ describe('BusSearchResultsPage', () => {
 
     expect(screen.getByRole('dialog', { name: 'Filters' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Apply' })).toBeInTheDocument()
+  })
+
+  it('carries the parsed search date into each bus card\'s seat-selection link', () => {
+    window.history.replaceState(null, '', '/search?from=1&to=2&date=2024-10-07')
+    render(<BusSearchResultsPage />)
+
+    const viewSeatsButtons = screen.getAllByRole('button', { name: 'View seats' })
+    fireEvent.click(viewSeatsButtons[0])
+
+    expect(window.location.search).toContain('date=2024-10-07')
   })
 })

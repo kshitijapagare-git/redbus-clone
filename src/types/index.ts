@@ -19,6 +19,56 @@ export interface BoardingPoint {
   cityId: City['id']
 }
 
+export interface Coupon {
+  code: string
+  discountAmount: number
+  active: boolean
+  allowedBusIds: number[]
+}
+
+export type PaymentMethodType = 'upi' | 'card' | 'netbanking'
+
+export type BookingStatus = 'Confirmed'
+
+export interface Passenger {
+  seatId: string
+  name: string
+  age: number
+  gender: string
+}
+
+export interface Booking {
+  pnr: string
+  status: BookingStatus
+  busId: number
+  operatorName: string
+  busType: BusType
+  fromCityId: number
+  toCityId: number
+  /** Date-only key in 'YYYY-MM-DD' form (local calendar date). */
+  date: string
+  /** 24h 'HH:MM' */
+  departureTime: string
+  /** 24h 'HH:MM' */
+  arrivalTime: string
+  seatIds: string[]
+  boardingPoint: BoardingPoint
+  droppingPoint: BoardingPoint
+  passengers: Passenger[]
+  contact: {
+    email: string
+    mobile: string
+  }
+  fare: {
+    subtotal: number
+    discount: number
+    gst: number
+    total: number
+  }
+  couponCode: string | null
+  createdAt: string
+}
+
 export type BusType = 'AC Seater' | 'AC Sleeper' | 'Non-AC Seater' | 'Non-AC Sleeper'
 
 export interface Bus {

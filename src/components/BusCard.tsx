@@ -3,9 +3,10 @@ import { buildSeatSelectionUrl, navigateTo } from '../lib/route'
 
 export interface BusCardProps {
   bus: Bus
+  date?: string
 }
 
-function BusCard({ bus }: BusCardProps) {
+function BusCard({ bus, date }: BusCardProps) {
   return (
     <li className="bus-card">
       <div className="bus-card-head">
@@ -24,7 +25,7 @@ function BusCard({ bus }: BusCardProps) {
         <button
           type="button"
           className="bus-card-view-seats-btn"
-          onClick={() => navigateTo(buildSeatSelectionUrl(bus.id, {}))}
+          onClick={() => navigateTo(buildSeatSelectionUrl(bus.id, date !== undefined ? { date } : {}))}
         >
           View seats
         </button>

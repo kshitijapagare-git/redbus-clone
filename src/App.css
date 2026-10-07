@@ -1041,3 +1041,128 @@ button { font: inherit; cursor: pointer; }
 @media (max-width: 480px) {
   .passenger-form-grid { grid-template-columns: 1fr; }
 }
+
+/* Payment page */
+.payment-page { padding: 32px 0 80px; overflow-x: hidden; max-width: 100vw; }
+.payment-page-inner { display: flex; flex-direction: column; gap: 20px; max-width: 100%; }
+.payment-summary, .payment-coupon, .payment-methods {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 100%;
+}
+.payment-summary-bus { margin: 0; font-weight: 700; }
+.payment-summary-route { margin: 0; color: var(--muted); font-size: 14px; font-weight: 600; }
+.payment-summary-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; }
+.payment-summary-label { color: var(--muted); }
+.payment-summary-value { font-weight: 700; text-align: right; }
+.payment-summary-passengers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.payment-summary-total { border-top: 1px solid var(--line); padding-top: 10px; font-size: 16px; }
+.payment-summary-total .payment-summary-value { color: var(--red); }
+.payment-summary-discount .payment-summary-value { color: var(--red); }
+.payment-coupon { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px; }
+.payment-coupon label { width: 100%; font-size: 13px; font-weight: 600; color: var(--muted); }
+.payment-coupon input {
+  flex: 1 1 200px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 14px;
+}
+.payment-coupon-applied { width: 100%; margin: 0; color: var(--red); font-size: 13px; font-weight: 600; }
+.payment-method-tabs { display: flex; gap: 10px; flex-wrap: wrap; }
+.payment-field { display: flex; flex-direction: column; gap: 4px; max-width: 100%; }
+.payment-field label { font-size: 13px; font-weight: 600; color: var(--muted); }
+.payment-field input, .payment-field select {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 14px;
+  background: #fff;
+  max-width: 100%;
+}
+.payment-failure { border: 1px solid var(--red); background: var(--red-soft); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.payment-retry-btn {
+  align-self: flex-start;
+  border: 0;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 24px;
+}
+.payment-pay-btn {
+  align-self: stretch;
+  border: 0;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px 0;
+}
+.payment-pay-btn:disabled { background: #ccc; color: #888; cursor: not-allowed; }
+
+@media (max-width: 480px) {
+  .payment-coupon input { flex-basis: 100%; }
+}
+
+/* Booking e-ticket page */
+.booking-ticket-page { padding: 32px 0 80px; overflow-x: hidden; max-width: 100vw; }
+.booking-ticket-page-inner { display: flex; flex-direction: column; gap: 20px; max-width: 100%; }
+.booking-ticket-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.booking-ticket-print-btn {
+  border: 0;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 24px;
+}
+.booking-ticket-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 100%;
+}
+.booking-ticket-pnr-row { align-items: center; flex-wrap: wrap; }
+.booking-ticket-status {
+  background: var(--red-soft);
+  color: var(--red);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-left: auto;
+}
+.booking-ticket-bus { margin: 0; font-weight: 700; }
+.booking-ticket-route { margin: 0; color: var(--muted); font-size: 14px; font-weight: 600; }
+.booking-ticket-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; flex-wrap: wrap; }
+.booking-ticket-label { color: var(--muted); }
+.booking-ticket-value { font-weight: 700; text-align: right; }
+.booking-ticket-passengers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.booking-ticket-total { border-top: 1px solid var(--line); padding-top: 10px; font-size: 16px; }
+.booking-ticket-total .booking-ticket-value { color: var(--red); }
+.booking-ticket-discount .booking-ticket-value { color: var(--red); }
+
+@media print {
+  .site-footer, .header, .app-promo-strip, .booking-ticket-print-btn {
+    display: none !important;
+  }
+  .booking-ticket-page { padding: 0; }
+  .booking-ticket-print {
+    border: 0;
+    padding: 0;
+  }
+}

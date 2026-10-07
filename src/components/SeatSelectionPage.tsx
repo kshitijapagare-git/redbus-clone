@@ -5,6 +5,7 @@ import SeatMap from './SeatMap'
 import { boardingPoints, buses, busesSeats } from '../data'
 import { useBoardingPointSelection } from '../hooks/useBoardingPointSelection'
 import { useSeatSelection } from '../hooks/useSeatSelection'
+import { bookedSeatIdsForBusAndDate, loadBookings } from '../lib/bookings'
 import { resolveSelectedBoardingPoint } from '../lib/boardingPointSelection'
 import { navigateTo } from '../lib/route'
 import { loadWomenToggle } from '../lib/womenToggle'
@@ -28,7 +29,17 @@ const EMPTY_SEAT_MAP: BusSeatMap = { mode: 'seater', decks: { lower: [] }, booke
 function SeatSelectionPage({ busId }: SeatSelectionPageProps) {
   const bus = buses.find((b) => b.id === busId)
   const rawSeatMap = busesSeats[busId]
-  const seatMap = useMemo(() => rawSeatMap ?? EMPTY_SEAT_MAP, [rawSeatMap])
+  const date = new URLSearchParams(window.location.search).get('date')
+
+  const seatMap = useMemo(() => {
+    const base = rawSeatMap ?? EMPTY_SEAT_MAP
+    if (date === null) return base
+    const { bookings } = loadBookings()
+    const newlyBookedIds = bookedSeatIdsForBusAndDate(bookings, busId, date)
+    if (newlyBookedIds.length === 0) return base
+    const mergedBooked = Array.from(new Set([...base.booked, ...newlyBookedIds]))
+    return { ...base, booked: mergedBooked }
+  }, [rawSeatMap, busId, date])
 
   const [womenBookingEnabled] = useState(() => loadWomenToggle().value)
 
@@ -55,6 +66,9 @@ function SeatSelectionPage({ busId }: SeatSelectionPageProps) {
     params.set('seats', selectedSeatIds.join(','))
     params.set('bp', String(boardingPoint.id))
     params.set('dp', String(droppingPoint.id))
+    if (date !== null) {
+      params.set('date', date)
+    }
     navigateTo(`/search/${busId}/seats/passengers?${params.toString()}`)
   }
 
@@ -105,5 +119,7 @@ function SeatSelectionPage({ busId }: SeatSelectionPageProps) {
     </main>
   )
 }
+
+
 
 export default SeatSelectionPage

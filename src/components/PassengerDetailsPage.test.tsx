@@ -1,10 +1,12 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import PassengerDetailsPage from './PassengerDetailsPage'
+import { clearBookingDraft, loadBookingDraft } from '../lib/bookingDraft'
 
 describe('PassengerDetailsPage', () => {
   afterEach(() => {
     window.history.replaceState(null, '', '/')
+    clearBookingDraft()
   })
 
   it('shows a not-found alert for an unknown bus id', () => {
@@ -137,5 +139,38 @@ describe('PassengerDetailsPage', () => {
     const remainingNameInputs = screen.getAllByLabelText('Name')
     expect(remainingNameInputs).toHaveLength(1)
     expect((remainingNameInputs[0] as HTMLInputElement).value).toBe('Ravi')
+  })
+
+  it('does not navigate away when submitted with invalid fields', () => {
+    window.history.replaceState(null, '', '/search/3/seats/passengers?seats=L2&bp=1&dp=3')
+    render(<PassengerDetailsPage busId={3} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    expect(window.location.pathname).toBe('/search/3/seats/passengers')
+    expect(loadBookingDraft()).toBeNull()
+  })
+
+  it('navigates to the payment URL and saves the booking draft when all fields are valid', () => {
+    window.history.replaceState(null, '', '/search/3/seats/passengers?seats=L2&bp=1&dp=3&date=2024-10-07')
+    render(<PassengerDetailsPage busId={3} />)
+
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Asha' } })
+    fireEvent.change(screen.getByLabelText('Age'), { target: { value: '30' } })
+    fireEvent.change(screen.getByLabelText('Gender'), { target: { value: 'Female' } })
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'asha@example.com' } })
+    fireEvent.change(screen.getByLabelText('Mobile number'), { target: { value: '9876543210' } })
+
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    expect(window.location.pathname).toBe('/search/3/seats/payment')
+    expect(window.location.search).toContain('seats=L2')
+    expect(window.location.search).toContain('bp=1')
+    expect(window.location.search).toContain('dp=3')
+    expect(window.location.search).toContain('date=2024-10-07')
+
+    const draft = loadBookingDraft()
+    expect(draft?.passengers.L2).toEqual({ name: 'Asha', age: '30', gender: 'Female' })
+    expect(draft?.contact).toEqual({ email: 'asha@example.com', mobile: '9876543210' })
   })
 })
